@@ -3,6 +3,8 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const csrf = require('csurf');
+const cookieParser = require('cookie-parser')
 
 
 //keys variables
@@ -17,9 +19,32 @@ const authRoutes = require('./routes/auth.routes');
 
 
 
+
+
 app.use(express.json());
+const csrfProtection = csrf({ cookie: true });
+app.use(cookieParser())
+
+app.use(csrfProtection, (req, res, next)=> {
+
+    const token = req.csrfToken();
+    res.cookie('XSRF-TOKEN', token);
+    res.locals.csrfToken = token;
+
+    next();
+});
+
+app.get('/csrf', csrfProtection, (req, res) => {
+    res.json({token: req.csrfToken()})
+})
 
 app.use('/auth', authRoutes);
+
+
+
+
+
+
 
 
 

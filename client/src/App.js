@@ -1,13 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
 import Auth from "./components/AuthComponents/Auth";
+import {useEffect} from "react";
 
 function App() {
-  return (
-    <div className="App">
-      <Auth/>
-    </div>
-  );
+
+
+    useEffect( () => {
+        async function csrf() {
+            fetch('/csrf')
+        }
+        csrf();
+
+    }, [])
+    return (
+
+
+        <div className="App">
+            <Auth/>
+        </div>
+    );
 }
 
 export default App;

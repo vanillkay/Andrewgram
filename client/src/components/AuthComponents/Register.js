@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {checkFieldValue} from "./authUtils/validators";
 import {useHttp} from "../../hooks/http.hook";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,12 +36,27 @@ const validateEmail = (email) => {
     return re.test(String(email).toLowerCase());
 }
 
+
+
 const Register = () => {
     const [errors, setErrors] = useState({login: false, password: false, name: false, email: false, rePassword: false});
     const [errorText, setErrorText] = useState({login: "", password: "", name: "", email: "", rePassword: ""});
     const [inputs, setInputs] = useState({login: "", password: "", name: "", email: "",  rePassword: ""});
 
     const {loading, request} = useHttp();
+
+    const checkFieldValue = (field, min, error) => {
+
+        if (field.value.length < min) {
+            setErrors(prevState => ({...prevState, [field.name]: true}));
+            setErrorText(prevState => ({...prevState, [field.name]: error}))
+            return true;
+        } else if (field.value.length >= min) {
+            setErrors(prevState => ({...prevState, [field.name]: false}));
+            setErrorText(prevState => ({...prevState, [field.name]: ''}))
+            return false;
+        }
+    }
 
     const handleInputs = (e) => {
         if (e.target.name === 'login') {
@@ -71,33 +85,38 @@ const Register = () => {
         }
         return setInputs(prevInput => ({...prevInput, [e.target.name]: e.target.value}))
     }
+
+
     const handleForm = async (e) => {
         e.preventDefault();
-        let isValid = true;
-        for (let value in inputs) {
-            if (value === 'name') continue;
-            if (!inputs[value]) {
-                isValid = false;
-                setErrors(prevState => ({...prevState, [value]: true}))
-                setErrorText(prevState => ({...prevState, [value]: "Введите значение"}))
+        try{
+            let isValid = true;
+            for (let value in inputs) {
+                if (value === 'name') continue;
+                if (!inputs[value]) {
+                    isValid = false;
+                    setErrors(prevState => ({...prevState, [value]: true}))
+                    setErrorText(prevState => ({...prevState, [value]: "Введите значение"}))
+                }
             }
+            if (!isValid) return;
+            for (let error in errors) {
+                if (error === 'name') continue;
+                if (errors[error]) return;
+            }
+
+            const userInputs = {...inputs};
+
+            delete userInputs.rePassword;
+
+            const userValues = {...userInputs};
+
+
+            const data = await request('/auth/register', 'post', userValues);
+            console.log(data);
+        }catch (e) {
+            console.log(e);
         }
-        if (!isValid) return;
-        for (let error in errors) {
-            if (error === 'name') continue;
-            if (errors[error]) return;
-        }
-
-        const userInputs = {...inputs};
-
-        delete userInputs.rePassword;
-
-        const userValues = {...userInputs};
-
-        console.log(userValues);
-
-        const data = await request('/auth/register', 'post', userValues);
-        console.log(data);
     }
 
 

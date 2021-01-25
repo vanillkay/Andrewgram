@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles} from '@material-ui/core/styles';
 import {Button} from "@material-ui/core";
-import {checkFieldValue} from './authUtils/validators';
+import {useHttp} from "../../hooks/http.hook";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,33 +37,29 @@ const Login = () => {
     const [error, setError] = useState({login: false, password: false});
     const [errorText, setErrorText] = useState({login: "", password: ""});
     const [inputs, setInputs] = useState({login: "", password: ""});
-    const [isLogin, setIsLogin] = useState(false);
+
+    const {loading, request} = useHttp();
 
 
 
     const handleInputs = (e) => {
-        if (e.target.name === 'login') {
-            checkFieldValue(e.target, 5, 'Минимальная длина 5 символов', setError, setErrorText);
-        }
-        if (e.target.name === 'password') {
-            checkFieldValue(e.target, 7, 'Минимальная длина 7 символов', setError, setErrorText);
-        }
         return setInputs(prevInput => ({...prevInput, [e.target.name]: e.target.value}))
     }
 
 
-    const handleForm = (e) => {
+    const handleForm = async (e) => {
         e.preventDefault();
-        if (error.login || error.password){
-            return;
+        try {
+            if (error.login || error.password){
+                return;
+            }
+
+            const user = await request('/auth/login', 'post', inputs);
+
+            console.log(user);
+        }catch (e) {
+            console.log(e);
         }
-        const loginCheck = checkFieldValue({name: 'login', value: inputs.login}, 5, "Введите логин", setError, setErrorText);
-        const passwordCheck = checkFieldValue({name: 'password', value: inputs.password}, 7, "Введите пароль", setError, setErrorText);
-        if (loginCheck || passwordCheck) {
-            return
-        }
-        console.log(error);
-        console.log(inputs)
     }
 
 
@@ -98,10 +94,10 @@ const Login = () => {
                     />
                 </div>
                 <div className={classes["form-actions"]}>
-                    <Button onClick={handleForm} disabled={isLogin} type={'submit'} variant="contained" color="primary">
+                    <Button onClick={handleForm} disabled={loading} type={'submit'} variant="contained" color="primary">
                         Войти
                     </Button>
-                    <Button variant="contained" disabled={isLogin} color="primary">
+                    <Button variant="contained" disabled={loading} color="primary">
                         Забыли пароль
                     </Button>
                 </div>
