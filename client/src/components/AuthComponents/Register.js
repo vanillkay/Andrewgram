@@ -29,6 +29,17 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiFormHelperText-root	': {
             fontSize: '1rem'
         },
+    },
+    'register-error': {
+        color: theme.colors.error,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    'register-success': {
+        color: theme.colors.success,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '1.2rem'
     }
 }));
 const validateEmail = (email) => {
@@ -37,13 +48,16 @@ const validateEmail = (email) => {
 }
 
 
-
 const Register = () => {
     const [errors, setErrors] = useState({login: false, password: false, name: false, email: false, rePassword: false});
     const [errorText, setErrorText] = useState({login: "", password: "", name: "", email: "", rePassword: ""});
-    const [inputs, setInputs] = useState({login: "", password: "", name: "", email: "",  rePassword: ""});
+    const [inputs, setInputs] = useState({login: "", password: "", name: "", email: "", rePassword: ""});
 
     const {loading, request} = useHttp();
+    const [isServerError, setIsServerError] = useState(false);
+    const [serverErrorText, setServerErrorText] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
+
 
     const checkFieldValue = (field, min, error) => {
 
@@ -65,11 +79,11 @@ const Register = () => {
         if (e.target.name === 'password') {
             checkFieldValue(e.target, 7, 'Минимальная длина 7 символов', setErrors, setErrorText);
         }
-        if (e.target.name === 'email'){
-            if (!validateEmail(e.target.value)){
+        if (e.target.name === 'email') {
+            if (!validateEmail(e.target.value)) {
                 setErrors(prevState => ({...prevState, email: true}));
                 setErrorText(prevState => ({...prevState, email: 'Введите правильный email'}))
-            }else {
+            } else {
                 setErrors(prevState => ({...prevState, email: false}));
                 setErrorText(prevState => ({...prevState, email: ''}))
             }
@@ -89,7 +103,7 @@ const Register = () => {
 
     const handleForm = async (e) => {
         e.preventDefault();
-        try{
+        try {
             let isValid = true;
             for (let value in inputs) {
                 if (value === 'name') continue;
@@ -100,6 +114,7 @@ const Register = () => {
                 }
             }
             if (!isValid) return;
+
             for (let error in errors) {
                 if (error === 'name') continue;
                 if (errors[error]) return;
@@ -112,10 +127,27 @@ const Register = () => {
             const userValues = {...userInputs};
 
 
-            const data = await request('/auth/register', 'post', userValues);
-            console.log(data);
-        }catch (e) {
-            console.log(e);
+            const user = await request('/auth/register', 'post', userValues);
+
+            if (!user.user) {
+                throw new Error('Ошибка регистрации')
+            } else {
+                if (isServerError) {
+                    setIsServerError(false);
+                }
+                setInputs({login: "", name: "", email: "", password: "", rePassword: ""})
+                setIsSuccess(true);
+            }
+        } catch (e) {
+            if (e.message.toLowerCase().includes('логин')) {
+                setErrors(prevState => ({...prevState, login: true}));
+            } else if (e.message.includes('email')) {
+                setErrors(prevState => ({...prevState, email: true}));
+            } else if (e.message.toLowerCase().includes('пароль') || e.message.toLowerCase().includes('пароли')) {
+                setErrors(prevState => ({...prevState, password: true, rePassword: true}));
+            }
+            setIsServerError(true);
+            setServerErrorText(e.message);
         }
     }
 
@@ -184,6 +216,8 @@ const Register = () => {
                         value={inputs.rePassword}
                     />
                 </div>
+                {isServerError && <p className={classes['register-error']}>{serverErrorText}</p>}
+                {isSuccess && <p className={classes['register-success']}>Вы успешно зарегистрировались</p>}
                 <div className={classes["form-actions"]}>
                     <Button onClick={handleForm} disabled={loading} type={'submit'} variant="contained" color="primary">
                         Зарегестривароваться

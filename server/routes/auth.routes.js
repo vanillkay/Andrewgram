@@ -26,9 +26,10 @@ router.post('/register', registerValidators, async (req, res) => {
         const user = new User({
             email, name, password: hashPassword, login
         })
+
         await user.save();
 
-        res.json({message: "jopa"});
+        res.status(200).json({user});
     } catch (e) {
         console.log(e);
     }
@@ -48,7 +49,7 @@ router.post('/login', loginValidators, async (req, res) => {
 
         const user = await User.findOne({login});
 
-        res.json({message: user});
+        res.status(200).json({user});
 
 
     } catch (e) {

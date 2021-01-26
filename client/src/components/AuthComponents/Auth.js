@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Login from "./Login";
 import Register from "./Register";
+import {Slide} from "@material-ui/core";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -37,8 +38,22 @@ function a11yProps(index) {
     };
 }
 
+function LinkTab(props) {
+    return (
+        <Tab
+            component="a"
+            onClick={(event) => {
+                event.preventDefault();
+            }}
+            {...props}
+        />
+    );
+}
 
-function FullWidthTabs() {
+
+function FullWidthTabs(props) {
+
+    const {setIsAppear} = props;
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -62,21 +77,21 @@ function FullWidthTabs() {
                     variant="fullWidth"
                     aria-label="full width tabs example"
                 >
-                    <Tab label="Авторизоваться" {...a11yProps(0)} />
-                    <Tab label="Зарегистрироваться" {...a11yProps(1)} />
+                    <LinkTab  label="Авторизоваться" {...a11yProps(0)} />
+                    <LinkTab  label="Зарегистрироваться" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                axis={!value ? 'x-reverse' : 'x'}
                 index={value}
                 onChangeIndex={handleChangeIndex}
             >
                 <TabPanel value={value} index={0} dir={theme.direction}>
 
-                    <Login/>
+                    <Login setIsAppear={setIsAppear}/>
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                    <Register/>
+                    <Register setIsAppear={setIsAppear}/>
                 </TabPanel>
             </SwipeableViews>
         </div>
@@ -94,29 +109,34 @@ const useStyles = makeStyles((theme) => ({
 
     },
     "auth-page__auth-block": {
-        width: '90%',
-        maxWidth: '600px',
-        border: '3px solid #3f51b5',
+        width: '100%',
+        maxWidth: '700px',
         boxSizing: 'border-box',
         borderRadius: '20px',
-        padding: '3rem',
-        "& p": {
-            marginTop: '0',
-            fontSize: '2rem'
-        }
+        paddingTop: '3rem',
     }
 }));
 
 
 const Auth = () => {
+
     const classes = useStyles();
+    const [isAppear, setIsAppear] = useState(false);
+
+
+    useEffect(() => {
+        setIsAppear(true)
+    }, [])
+
+
     return (
-        <div className={classes["auth-page"]}>
-            <div className={classes["auth-page__auth-block"]}>
-                <p>Добро пожаловать в Andrewgram</p>
-                <FullWidthTabs/>
+        <Slide in={isAppear} timeout={{ enter: 1000, exit: 500,}}>
+            <div className={classes["auth-page"]}>
+                <div className={classes["auth-page__auth-block"]}>
+                    <FullWidthTabs setIsAppear={setIsAppear}/>
+                </div>
             </div>
-        </div>
+        </Slide>
     );
 };
 
