@@ -27,14 +27,14 @@ app.use(helmet());
 //     }
 // }));
 
-app.use(csrfProtection, (req, res, next) => {
-
-    const token = req.csrfToken();
-    res.cookie('XSRF-TOKEN', token);
-    res.locals.csrfToken = token;
-
-    next();
-});
+// app.use(csrfProtection, (req, res, next) => {
+//
+//     const token = req.csrfToken();
+//     res.cookie('XSRF-TOKEN', token);
+//     res.locals.csrfToken = token;
+//
+//     next();
+// });
 
 app.get('/csrf', csrfProtection, (req, res) => {
     res.json({token: req.csrfToken()})

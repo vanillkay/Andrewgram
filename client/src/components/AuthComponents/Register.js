@@ -73,14 +73,16 @@ const Register = () => {
     }
 
     const handleInputs = (e) => {
-        if (e.target.name === 'login') {
-            checkFieldValue(e.target, 5, 'Минимальная длина 5 символов', setErrors, setErrorText);
+        const field = e.target;
+
+        if (field.name === 'login') {
+            checkFieldValue(field, 5, 'Минимальная длина 5 символов');
         }
-        if (e.target.name === 'password') {
-            checkFieldValue(e.target, 7, 'Минимальная длина 7 символов', setErrors, setErrorText);
+        if (field.name === 'password') {
+            checkFieldValue(field, 7, 'Минимальная длина 7 символов');
         }
-        if (e.target.name === 'email') {
-            if (!validateEmail(e.target.value)) {
+        if (field.name === 'email') {
+            if (!validateEmail(field.value)) {
                 setErrors(prevState => ({...prevState, email: true}));
                 setErrorText(prevState => ({...prevState, email: 'Введите правильный email'}))
             } else {
@@ -88,8 +90,8 @@ const Register = () => {
                 setErrorText(prevState => ({...prevState, email: ''}))
             }
         }
-        if (e.target.name === 'rePassword') {
-            if (e.target.value !== inputs.password) {
+        if (field.name === 'rePassword') {
+            if (field.value !== inputs.password) {
                 setErrors(prevState => ({...prevState, rePassword: true}));
                 setErrorText(prevState => ({...prevState, rePassword: 'Пароли не совпадают'}))
             } else if (errors.rePassword) {
@@ -97,7 +99,7 @@ const Register = () => {
                 setErrorText(prevState => ({...prevState, rePassword: ''}))
             }
         }
-        return setInputs(prevInput => ({...prevInput, [e.target.name]: e.target.value}))
+        return setInputs(prevInput => ({...prevInput, [field.name]: field.value}))
     }
 
 

@@ -7,7 +7,7 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles(() => ({
     'entry-page': {
         width: '100%',
-        minHeight: '90vh',
+        height: '90vh',
         boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',

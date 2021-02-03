@@ -104,7 +104,7 @@ const Login = (props) => {
                 setIsAppear(false);
                 setTimeout(() => {
                     history.push('/app');
-                }, 500)
+                }, 700)
             }
 
             console.log(user);
@@ -120,6 +120,12 @@ const Login = (props) => {
         }
     }
 
+    const forgotPasswordHandle = () => {
+        setIsAppear(false);
+        setTimeout(() => {
+            history.push('/auth/reset');
+        }, 700)
+    }
 
     const classes = useStyles();
     return (
@@ -156,7 +162,7 @@ const Login = (props) => {
                     <Button onClick={handleForm} disabled={loading} type={'submit'} variant="contained" color="primary">
                         Войти
                     </Button>
-                    <Button variant="contained" style={{marginTop: '20px'}} disabled={loading} color="primary">
+                    <Button onClick={forgotPasswordHandle} variant="contained" style={{marginTop: '20px'}} disabled={loading} color="primary">
                         Забыли пароль
                     </Button>
                 </div>
