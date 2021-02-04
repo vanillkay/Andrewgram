@@ -25,7 +25,9 @@ const useStyles = makeStyles(theme => ({
     'reset-form__action': {
         marginTop: '2rem'
     },
-    'reset-form__resp': {},
+    'reset-form__resp': {
+        fontSize: '1.2rem'
+    },
     'reset-form__resp-success': {
         color: theme.colors.success
     },
@@ -128,10 +130,12 @@ const ResetPassword = (props) => {
                 name={'rePassword'}
                 value={password.rePassword}
             />
-            {isReady && serverError.isError &&
-            <div className={classes['reset-form__resp-error']}>{serverError.errorText}</div>}
-            {isReady && !serverError.isError &&
-            <div className={classes['reset-form__resp-success']}>Вы успешно изменили пароль</div>}
+            <div className={classes['reset-form__resp']}>
+                {isReady && serverError.isError &&
+                <div className={classes['reset-form__resp-error']}>{serverError.errorText}</div>}
+                {isReady && !serverError.isError &&
+                <div className={classes['reset-form__resp-success']}>Вы успешно изменили пароль</div>}
+            </div>
             <Button onClick={resetPassword} className={classes['reset-form__action']} disabled={loading} type={'submit'}
                     variant="contained" color="primary">
                 Измeнить пароль

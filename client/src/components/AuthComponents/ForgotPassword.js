@@ -30,12 +30,12 @@ const useStyles = makeStyles(theme => ({
     },
     'forgot-form__resp': {
         marginTop: '1rem',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontSize: '1.2rem'
 
     },
     'forgot-form__resp-success': {
         color: theme.colors.success,
-        fontSize: '1.2rem'
     },
     'forgot-form__resp-error': {
         color: theme.colors.error
@@ -49,7 +49,7 @@ const ForgotPassword = (props) => {
     const [email, setEmail] = useState('');
     const [inputError, setInputError] = useState(false);
     const [inputErrorText, setInputErrorText] = useState('');
-    const [response, setResponse] = useState({ready: false, success: false});
+    const [response, setResponse] = useState({ready: false, success: false, errorText: ''});
     const {loading, request} = useHttp();
     const classes = useStyles();
     const history = useHistory();
@@ -64,24 +64,27 @@ const ForgotPassword = (props) => {
     }
 
     const handleForm = async (e) => {
-        e.preventDefault();
-        if (!validateEmail(email)) {
-            setInputError(true);
-            setInputErrorText('Введите корректный email');
-            return;
-        } else {
-            if (inputError) {
-                setInputErrorText('');
-                setInputError(false);
-            }
-            const resp = await request('/auth/reset', 'post', {email});
-            if (resp.success) {
-                setEmail('');
-                setResponse({ready: true, success: true});
+        try {
+            e.preventDefault();
+            if (!validateEmail(email)) {
+                setInputError(true);
+                setInputErrorText('Введите корректный email');
+                return;
             } else {
-                setResponse({ready: true, success: false});
+                if (inputError) {
+                    setInputErrorText('');
+                    setInputError(false);
+                }
+                const resp = await request('/auth/reset', 'post', {email});
+                if (resp.success) {
+                    setEmail('');
+                    setResponse({ready: true, success: true, errorText: ''});
+                } else {
+                    throw new Error('Что-то пошло не так, повторите попытку позже')
+                }
             }
-            console.log(resp);
+        } catch (e) {
+            setResponse({ready: true, success: false, errorText: e.message || 'Что-то пошло не так, повторите попытку позже'});
         }
     };
 
@@ -110,8 +113,7 @@ const ForgotPassword = (props) => {
                 {response.ready && (response.success ?
                     <div className={classes['forgot-form__resp-success']}>На вашу почту отправлено письмо с
                         инструкцией. Если письма нету – проверьте спам</div> :
-                    <div className={classes['forgot-form__resp-error']}>Что-то пошло не так, повторите попытку
-                        позже</div>)}
+                    <div className={classes['forgot-form__resp-error']}>{response.errorText}</div>)}
             </div>
             <Button onClick={handleForm} className={classes['forgot-form__action']} disabled={loading}
                     type={'submit'} variant="contained"

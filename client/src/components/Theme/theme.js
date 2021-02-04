@@ -7,6 +7,7 @@ const theme = createMuiTheme({
         main: '#3f51b5',
         error: '#f44336',
         success: '#4caf50',
+        like: 'rgb(219, 86, 91)'
     },
     typography: {
         "fontFamily": "\"Montserrat\", \"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
