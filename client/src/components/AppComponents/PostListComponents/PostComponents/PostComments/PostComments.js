@@ -19,7 +19,11 @@ const useStyles = makeStyles(theme => ({
             color: 'black',
             fontWeight: 'bold',
             marginRight: '0.5rem',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            transition: '.3s',
+            '&:hover':{
+                textDecoration: 'underline'
+            }
         },
         '&:last-of-type':{
             marginBottom: '0'

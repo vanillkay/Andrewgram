@@ -1,5 +1,5 @@
 import React from 'react';
-import Posts from "../components/AppComponents/PostsComponents/Posts/Posts";
+import PostsList from "../components/AppComponents/PostListComponents/PostsList/PostsList";
 import {makeStyles} from "@material-ui/core/styles";
 import ProfileInfo from "../components/AppComponents/ProfileInfoComponents/ProfileInfo/ProfileInfo";
 
@@ -43,7 +43,7 @@ const Andrewgram = () => {
     return (
         <div className={classes.main}>
             <div className={classes['main__posts']}>
-                <Posts/>
+                <PostsList/>
             </div>
             <div className={classes['main__profile-info']}>
                 <ProfileInfo/>
