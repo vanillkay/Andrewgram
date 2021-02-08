@@ -22,6 +22,38 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
+            imageSrc: {
+                type: String,
+                required: true,
+            },
+            info: {
+                type: String
+            },
+            created: {
+                type: Date,
+                required: true,
+                default: Date.now
+            },
+            comments: [
+                {
+                    owner: {
+                        type: String,
+                        required: true
+                    },
+                    text: {
+                        type: String,
+                        required: true
+                    }
+                }
+            ],
+            likes: [
+                {
+                    owner: {
+                        type: String,
+                        required: true
+                    },
+                }
+            ]
         }
     ],
     subscriptions: [

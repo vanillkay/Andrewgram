@@ -31,7 +31,7 @@ const AndrewgramRoutes = () => {
             <Route exact path='/auth/reset' component={ForgotPasswordPage}/>
             <Route exact path='/auth/reset/:token' component={ResetPasswordPage}/>
             <ProtectedRoute exact path='/app' component={Andrewgram}/>
-            <Route  exact path='/profile/:login' component={ProfilePage}/>
+            <ProtectedRoute exact path='/profile/:login' component={ProfilePage}/>
             {/*<Route path='*' component={Page404}/>*/}
         </Switch>
     );

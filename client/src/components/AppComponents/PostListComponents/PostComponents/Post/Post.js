@@ -36,11 +36,8 @@ const useStyles = makeStyles((theme) => ({
 const Post = (props) => {
 
     const {
-        isLiked = false,
-        likes = [],
-        serverComments = [],
+        info,
         loading = false,
-        id
     } = props;
 
 
@@ -55,6 +52,7 @@ const Post = (props) => {
     const dispatch = useDispatch();
 
     const userInfo = useSelector(getUserInfo)
+
     const toggleLike = () => {
         dispatch(postsActions.toggleLike(id, userInfo.login));
     }
@@ -104,7 +102,7 @@ const Post = (props) => {
                     <CardMedia
                         component={"img"}
                         title="Ted talk"
-                        src="http://images.unsplash.com/photo-1430116267665-e7f6b3dafce3?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max"
+                        src={'/' + info.imgSrc}
                         data-type={'post'}
                         data-info={id}
                     />
