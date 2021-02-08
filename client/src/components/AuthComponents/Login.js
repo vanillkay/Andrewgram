@@ -4,6 +4,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Button} from "@material-ui/core";
 import {useHttp} from "../../hooks/http.hook";
 import {useHistory} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {authUser} from "../../store/user/actions";
+import {setSubscriptions} from "../../store/subscribers/actions";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +57,8 @@ const Login = (props) => {
 
     const history = useHistory();
 
+    const dispatch = useDispatch();
+
     const {setIsAppear} = props;
 
 
@@ -95,7 +100,7 @@ const Login = (props) => {
 
             const user = await request('/auth/login', 'post', inputs);
 
-            if (!user.user) {
+            if (!user.userInfo) {
                 throw new Error('Такого пользователя нету')
             } else {
                 if (isServerError) {
@@ -107,6 +112,9 @@ const Login = (props) => {
                 }, 700)
             }
 
+            dispatch(authUser(user));
+            console.log(user);
+            dispatch(setSubscriptions(user.userInfo.subscriptions));
             console.log(user);
         } catch (e) {
             if (e.message.toLowerCase().includes('пароль')) {

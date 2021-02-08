@@ -2,40 +2,7 @@ import * as postsActionTypes from './types';
 
 
 const initialState = {
-    posts: [
-        {
-            id: 1,
-            isLiked: true,
-            likesAmount: [
-                {owner: 'nekit'},
-                {owner: 'denis'},
-                {owner: 'jora'},
-                {owner: 'aleg'},
-                {owner: 'gena'},
-                {owner: 'jepa'},
-                {owner: 'alena'},
-            ],
-            comments: [
-                {owner: 'nekit', comment: 'ti pidor'},
-                {owner: 'denis', comment: 'ya pidor?'},
-                {owner: 'andrei', comment: 'a mozhet ti pidor?'}
-            ]
-        },
-        {
-            id: 2,
-            isLiked: false,
-            likesAmount: [
-                {owner: 'denis'},
-                {owner: 'vadim'},
-                {owner: 'vova'}
-            ],
-            comments: [
-                {owner: 'vadim', comment: 'ti pidor'},
-                {owner: 'oleg', comment: 'ya pidor?'},
-                {owner: 'vova', comment: 'a mozhet ti pidor?'}
-            ]
-        }
-    ]
+    posts: []
 };
 
 const reducer = (state = initialState, action) => {

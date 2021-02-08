@@ -10,20 +10,21 @@ import {
 } from "@material-ui/core";
 import PostComments from "../PostComments/PostComments";
 import * as postsActions from "../../../../../store/posts/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Likes from "../Likes/Likes";
 import PostIcons from "../PostIcons/PostIcons";
 import NewComment from "../NewComment/NewComment";
+import {getUserInfo} from "../../../../../store/user/selectors";
 
 
 const useStyles = makeStyles((theme) => ({
     post: {
         width: '100%',
-        marginBottom: '2rem'
+        marginBottom: '2rem',
+        border: '1px solid rgb(219, 219, 219)',
+        borderRadius: '3px'
     },
     media: {
-        minHeight: '300px',
-        height: 'auto',
         '& img': {
             width: '100%',
             height: 'auto',
@@ -53,9 +54,9 @@ const Post = (props) => {
 
     const dispatch = useDispatch();
 
-
+    const userInfo = useSelector(getUserInfo)
     const toggleLike = () => {
-        dispatch(postsActions.toggleLike(id, 'nekit'));
+        dispatch(postsActions.toggleLike(id, userInfo.login));
     }
 
     const toggleComment = () => {
@@ -103,7 +104,7 @@ const Post = (props) => {
                     <CardMedia
                         component={"img"}
                         title="Ted talk"
-                        src="https://cdn.auth0.com/blog/react-js/react.png"
+                        src="http://images.unsplash.com/photo-1430116267665-e7f6b3dafce3?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max"
                         data-type={'post'}
                         data-info={id}
                     />

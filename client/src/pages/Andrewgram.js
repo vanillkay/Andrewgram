@@ -1,7 +1,7 @@
 import React from 'react';
 import PostsList from "../components/AppComponents/PostListComponents/PostsList/PostsList";
 import {makeStyles} from "@material-ui/core/styles";
-import ProfileInfo from "../components/AppComponents/ProfileInfoComponents/ProfileInfo/ProfileInfo";
+import SideProfileInfo from "../components/AppComponents/SideProfileInfoComponents/SideProfileInfo/SideProfileInfo";
 
 const useStyles = makeStyles(theme => ({
     'main': {
@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     },
     'main__profile-info': {
         width: '100%',
-        border: '3px solid black',
     },
     '@media (min-width: 600px)': {
         main: {
@@ -32,7 +31,12 @@ const useStyles = makeStyles(theme => ({
             maxWidth: '700px',
         },
         'main__profile-info':{
-            width: '20%'
+            width: '20%',
+            marginLeft: '2rem',
+            position: 'sticky',
+            top: 'calc(4rem + 10px)',
+            minWidth: '300px'
+
         }
     }
 }))
@@ -46,7 +50,7 @@ const Andrewgram = () => {
                 <PostsList/>
             </div>
             <div className={classes['main__profile-info']}>
-                <ProfileInfo/>
+                <SideProfileInfo/>
             </div>
 
         </div>

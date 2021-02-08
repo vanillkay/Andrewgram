@@ -15,7 +15,33 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    posts: [
+        {
+            owner: {
+                type: String,
+                required: true
+            },
+        }
+    ],
+    subscriptions: [
+        {
+            login: {
+                type: String,
+                required: true
+            },
+        }
+    ],
+    subscribers: [
+        {
+            login: {
+                type: String,
+                required: true
+            },
+        }
+    ]
+
+
 })
 
 

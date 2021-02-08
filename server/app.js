@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet');
+const path = require('path');
+const fileMiddleware = require('./middlewares/file');
 
 
 //keys variables
@@ -12,7 +14,11 @@ const keys = require('../keys');
 
 
 const authRoutes = require('./routes/auth.routes');
+const postRoutes = require('./routes/post.routes');
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images',express.static(path.join(__dirname, 'images')));
+app.use(fileMiddleware.single('avatar'))
 
 app.use(express.json());
 const csrfProtection = csrf({cookie: true});
@@ -36,11 +42,13 @@ app.use(helmet());
 //     next();
 // });
 
+app.use('/auth', authRoutes);
+app.use('/post', postRoutes);
+
 app.get('/csrf', csrfProtection, (req, res) => {
     res.json({token: req.csrfToken()})
 })
 
-app.use('/auth', authRoutes);
 
 
 async function start() {

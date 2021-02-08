@@ -54,7 +54,16 @@ router.post('/login', loginValidators, async (req, res) => {
 
         const user = await User.findOne({login});
 
-        res.status(200).json({user});
+        const userInfo = {
+            email: user.email,
+            name: user.name,
+            login: user.login,
+            subscriptions: user.subscriptions,
+            posts: user.posts,
+            subscribers: user.subscribers
+        }
+
+        res.status(200).json({userInfo});
 
 
     } catch (e) {
