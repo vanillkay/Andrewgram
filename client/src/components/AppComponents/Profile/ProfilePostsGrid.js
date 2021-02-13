@@ -4,8 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Backdrop, Modal} from "@material-ui/core";
 import Post from "../PostListComponents/PostComponents/Post/Post";
 import {useSelector} from "react-redux";
-import {getPosts} from "../../../store/posts/selectors";
-import {getUserPosts} from "../../../store/user/selectors";
+import {getUserPosts, getUserPostsLoaded} from "../../../store/posts/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile__posts': {
@@ -47,7 +46,8 @@ const ProfilePostsGrid = () => {
 
     const posts = useSelector(getUserPosts);
 
-    console.log(posts);
+    const isLoaded = useSelector(getUserPostsLoaded);
+
 
     const handleClose = () => {
         setIsPostOpen(false);
@@ -58,11 +58,15 @@ const ProfilePostsGrid = () => {
         setModalInfo(info);
     }
 
+    const loadingPostsArr = [1, 2, 3, 4, 5, 6];
+
     return (
         <>
             <div className={classes['profile__posts']}>
-                {posts.map((item, index) => <ProfilePost key={index} imgSrc={item.imageSrc} info={item.info} open={openModal}/>)}
-                {!posts.length && <div className={classes['profile__posts-exist']}>Постов нету</div>}
+                {isLoaded && posts.map((item, index) => <ProfilePost key={index} imgSrc={item.imageSrc} info={item.info}
+                                                                     comments={item.comments} likes={item.likes}
+                                                                     ownerLogin={item.ownerLogin} open={openModal}/>)}
+                {!isLoaded && loadingPostsArr.map(() => <ProfilePost isLoading/>)}
             </div>
             {
                 isPostOpen &&

@@ -2,6 +2,8 @@ import React, {useRef, useState} from 'react';
 import {Backdrop, Button, Input, Modal, TextField} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+import {useDispatch} from "react-redux";
+import {addUserPost} from "../../../store/posts/actions";
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -75,6 +77,8 @@ const NewPost = () => {
 
     const fileInput = useRef();
 
+    const dispatch = useDispatch();
+
 
 
     const handleOpen = () => {
@@ -99,7 +103,6 @@ const NewPost = () => {
             formData.set('info', newPostInfo);
 
 
-            // console.log(formData);
 
             const res = await fetch('/post/new', {
                 method: 'post',
@@ -108,7 +111,10 @@ const NewPost = () => {
 
             const data = await res.json();
 
+
             if (data.post){
+                console.log('data',data.post)
+                dispatch(addUserPost(data.post));
                 setIsNewPost(false);
                 setNewPostInfo('');
             }

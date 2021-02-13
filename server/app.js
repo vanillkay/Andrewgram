@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser')
 const helmet = require('helmet');
 const path = require('path');
 const fileMiddleware = require('./middlewares/file');
+const userMiddleware = require('./middlewares/user');
+const session = require('express-session');
 
 
 //keys variables
@@ -15,15 +17,37 @@ const keys = require('../keys');
 
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
+const postsRoutes = require('./routes/posts.routes');
+
+
+const MongoStore = require('connect-mongodb-session')(session);
+const store = new MongoStore({
+    collection: 'sessions',
+    uri: keys.MONGODB_URI
+})
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images',express.static(path.join(__dirname, 'images')));
 app.use(fileMiddleware.single('avatar'))
 
+app.use(session({
+    secret: keys.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store
+}));
+
 app.use(express.json());
 const csrfProtection = csrf({cookie: true});
 app.use(cookieParser());
 app.use(helmet());
+
+app.use(userMiddleware);
+
+
+
+
 // app.use(helmet.contentSecurityPolicy({
 //     directives: {
 //         defaultSrc: ["'self'"],
@@ -44,6 +68,8 @@ app.use(helmet());
 
 app.use('/auth', authRoutes);
 app.use('/post', postRoutes);
+app.use('/posts', postsRoutes);
+
 
 app.get('/csrf', csrfProtection, (req, res) => {
     res.json({token: req.csrfToken()})

@@ -1,35 +1,37 @@
 const {Router} = require('express');
 const router = Router();
-const User = require('../models/user');
-const { v4: uuidv4 } = require('uuid');
+const Post = require('../models/post');
+
 
 
 
 router.post('/new', async (req, res) => {
     try{
-        const {user, info = ''} = req.body;
+        const {info = ''} = req.body;
 
-        const neededUser = await User.findOne({login: user});
+        const user = req.session.user;
 
 
         const newPost = {
-            owner: neededUser.login,
+            owner: user,
+            ownerLogin: user.login,
             imageSrc: req.file.path,
             info,
-            id: uuidv4()
-
         }
 
-        console.log(newPost);
 
-        neededUser.posts = [newPost, ...neededUser.posts];
 
-        await neededUser.save();
+        const post = new Post(newPost);
 
-        res.status(202).json({post: newPost})
+        await post.save();
+
+        await req.user.addPost(post);
+
+        res.status(202).json({post})
 
     }catch (e){
-        console.log(e)
+        res.status(500).json({message: 'Серверная ошибка'})
+        console.log(e);
     }
 })
 

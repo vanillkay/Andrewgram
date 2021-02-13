@@ -10,21 +10,21 @@ function getCookie(name) {
 export const useHttp = () => {
     const [loading, setLoading] = useState(false);
 
-    const request = useCallback(async (url, method = 'GET', body = {}, headers = {}) => {
+    const request = useCallback(async (url, method = 'get', body = {}, headers = {}) => {
         setLoading(true);
         try {
 
             const token = getCookie("XSRF-TOKEN");
 
 
-            const init = method === 'GET' ? {
+            const init = {
                 method,
                 headers: {...headers, 'Content-Type': 'application/json', 'x-csrf-token': token}
-            } : {
-                method,
-                body: await JSON.stringify(body),
-                headers: {...headers, 'Content-Type': 'application/json', 'x-csrf-token': token}
-            };
+            }
+
+            if (method !== 'get') {
+                init.body = await JSON.stringify(body);
+            }
 
             const response = await fetch(url, {...init});
 

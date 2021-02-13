@@ -3,7 +3,9 @@ import {Avatar, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {toggleSubs} from "../../../../store/subscribers/actions";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {useHttp} from "../../../../hooks/http.hook";
+import {logoutUser} from "../../../../store/user/actions";
 
 const useStyles = makeStyles(theme => ({
     'profile': {
@@ -21,7 +23,6 @@ const useStyles = makeStyles(theme => ({
     'profile__avatar': {
         width: '4rem',
         height: '4rem',
-        justifySelf: 'flex-start',
         '&:hover': {
             cursor: 'pointer'
         }
@@ -38,9 +39,13 @@ const useStyles = makeStyles(theme => ({
         margin: '0 1rem .2rem 0',
         textTransform: 'none',
         color: props => props.type === 'subscription' ? '' : theme.colors.main,
-        '&:hover':{
+        '&:hover': {
             background: 'none'
         }
+    },
+    'profile__logout-btn':{
+        width: '5rem',
+        height: '2rem'
     }
 }))
 
@@ -50,29 +55,51 @@ const ProfileRef = (props) => {
         type,
         isOwn,
         avatarClass,
+        isPageComp = false,
         avatar = 'https://cnet2.cbsistatic.com/img/-e95qclc6pwSnGE2YccC2oLDW_8=/1200x675/2020/04/16/7d6d8ed2-e10c-4f91-b2dd-74fae951c6d8/bazaart-edit-app.jpg',
         login = 'Andrew'
     } = props;
 
     const dispatch = useDispatch();
 
+    const {request, loading} = useHttp();
+
     const toggleSubsBtn = () => {
         dispatch(toggleSubs({login, type}))
     }
-    const btnText = type === 'subscription' ? 'Отписаться' : 'Подписаться'
+    const btnText = type === 'subscription' ? 'Отписаться' : 'Подписаться';
 
-    const classes = useStyles({type});
+    const logout = () => {
+        request('/auth/logout')
+            .then(res => {
+                if (res.success){
+                    dispatch(logoutUser());
+                }
+            })
+
+    }
+
+    const classes = useStyles({type, isOwn});
     return (
         <div className={classes.profile}>
-            <Link to={'profile/' + login} className={classes['profile__info']}>
-                <Avatar alt="Remy Sharp" className={avatarClass || classes['profile__avatar']} src={avatar}/>
-                <div className={classes['profile__name']}>{login}</div>
-            </Link>
-            {!isOwn &&
-            <>
-                <Button disableRipple onClick={toggleSubsBtn} className={classes['profile__sbsc-btn']}>{btnText}</Button>
-            </>
+            {isPageComp ?
+                <div className={classes['profile__info']}>
+                    <Avatar alt="Remy Sharp" className={avatarClass || classes['profile__avatar']} src={avatar}/>
+                    <div className={classes['profile__name']}>{login}</div>
+                </div> :
+                <Link to={'profile/' + login} className={classes['profile__info']}>
+                    <Avatar alt="Remy Sharp" className={avatarClass || classes['profile__avatar']} src={avatar}/>
+                    <div className={classes['profile__name']}>{login}</div>
+                </Link>}
+            {isOwn ?  <Button variant={"contained"}
+                              color={"primary"}
+                              onClick={logout}
+                              disabled={loading}
+                              className={classes['profile__logout-btn']}>Выйти</Button>:
+                <Button disableRipple onClick={toggleSubsBtn}
+                        className={classes['profile__sbsc-btn']}>{btnText}</Button>
             }
+
         </div>
     );
 };

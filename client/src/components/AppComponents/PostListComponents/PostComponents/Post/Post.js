@@ -15,6 +15,7 @@ import Likes from "../Likes/Likes";
 import PostIcons from "../PostIcons/PostIcons";
 import NewComment from "../NewComment/NewComment";
 import {getUserInfo} from "../../../../../store/user/selectors";
+import {Link} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +30,15 @@ const useStyles = makeStyles((theme) => ({
             width: '100%',
             height: 'auto',
         }
+    },
+    'post-info':{
+        margin: '1rem 0 0 1rem',
+        '& a':{
+            textDecoration: 'none',
+            color: 'inherit',
+            fontWeight: 'bold',
+            marginRight: '.3rem'
+        }
     }
 }));
 
@@ -39,6 +49,8 @@ const Post = (props) => {
         info,
         loading = false,
     } = props;
+
+    const {isLiked, id, likes, text,comments, ownerLogin} = info;
 
 
     const [isComment, setIsComment] = useState(false);
@@ -56,6 +68,7 @@ const Post = (props) => {
     const toggleLike = () => {
         dispatch(postsActions.toggleLike(id, userInfo.login));
     }
+
 
     const toggleComment = () => {
         setIsComment(prevState => !prevState);
@@ -120,7 +133,11 @@ const Post = (props) => {
                         <PostIcons isLoading={isLoading} isComment={isComment} isLiked={isLiked} toggleLike={toggleLike}
                                    toggleComment={toggleComment}/>
                         <Likes likes={likes}/>
-                        <PostComments comments={serverComments}/>
+                        <div className={classes['post-info']}><Link  to={{pathname: '/profile/' + ownerLogin,
+                            state: {
+                                fromNotifications: false
+                            }}}>{ownerLogin}</Link>{text}</div>
+                        <PostComments comments={comments}/>
                         <Slide in={isComment} direction={animationSide} mountOnEnter
                                unmountOnExit>
                             <NewComment loadComment={loadComment} isLoading={isLoading}/>

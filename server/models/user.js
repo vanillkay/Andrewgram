@@ -16,46 +16,17 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    posts: [
-        {
-            owner: {
-                type: String,
-                required: true
-            },
-            imageSrc: {
-                type: String,
-                required: true,
-            },
-            info: {
-                type: String
-            },
-            created: {
-                type: Date,
-                required: true,
-                default: Date.now
-            },
-            comments: [
-                {
-                    owner: {
-                        type: String,
-                        required: true
-                    },
-                    text: {
-                        type: String,
-                        required: true
-                    }
+    posts: {
+        items: [
+            {
+                post: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Post',
+                    required: true,
                 }
-            ],
-            likes: [
-                {
-                    owner: {
-                        type: String,
-                        required: true
-                    },
-                }
-            ]
-        }
-    ],
+            }
+        ]
+    },
     subscriptions: [
         {
             login: {
@@ -72,9 +43,17 @@ const userSchema = new Schema({
             },
         }
     ]
-
-
 })
+
+userSchema.methods.addPost = function (post) {
+    const newPosts = [...this.posts.items];
+
+    newPosts.push({post});
+
+    this.posts.items = newPosts;
+
+    return this.save();
+}
 
 
 module.exports = model('User', userSchema);

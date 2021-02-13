@@ -98,6 +98,8 @@ const Login = (props) => {
 
             if (!isValid) return;
 
+            console.log(inputs)
+
             const user = await request('/auth/login', 'post', inputs);
 
             if (!user.userInfo) {

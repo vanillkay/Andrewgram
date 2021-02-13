@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as postsSelector from "../../../../store/posts/selectors";
 import * as postsActions from '../../../../store/posts/actions';
 import {getUserInfo} from "../../../../store/user/selectors";
+import {loadSubsPosts} from "../../../../store/posts/operations";
 
 const PostsList = () => {
 
@@ -22,6 +23,7 @@ const PostsList = () => {
 
 
     useEffect(() => {
+        dispatch(loadSubsPosts());
         document.addEventListener('dblclick', toggleLikePost);
         return () => {
             document.removeEventListener('dblclick', toggleLikePost);
@@ -30,8 +32,12 @@ const PostsList = () => {
     return (
         <div>
             {
-                serverPosts.map((item, index) => <Post isLiked={item.isLiked} likes={item.likesAmount}
-                                                       serverComments={item.comments} id={item.id}
+                serverPosts.map((item, index) => <Post info={{
+                    isLiked: item.isLiked,
+                    likes: item.likesAmount,
+                    serverComments: item.serverComments,
+                    id: item.id
+                }}
                                                        key={index}/>)
             }
             {

@@ -20,7 +20,6 @@ const SubscribeSection = () => {
 
     const recommended = useSelector(getRecommended);
 
-    console.log(subscribed);
 
     return (
         <section className={classes['subscribe-section']}>

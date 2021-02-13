@@ -46,11 +46,13 @@ router.post('/login', loginValidators, async (req, res) => {
 
         const errors = validationResult(req);
 
+
         if (!errors.isEmpty()) {
             return res.status(422).json({message: errors.array()[0].msg})
         }
 
         const {login} = req.body;
+
 
         const user = await User.findOne({login});
 
@@ -63,7 +65,12 @@ router.post('/login', loginValidators, async (req, res) => {
             subscribers: user.subscribers
         }
 
-        res.status(200).json({userInfo});
+        req.session.user = user;
+        req.session.isAuth = true;
+        req.session.save(err => {
+            if (err) throw err;
+            res.status(200).json({userInfo});
+        })
 
 
     } catch (e) {
@@ -72,6 +79,13 @@ router.post('/login', loginValidators, async (req, res) => {
 
     }
 });
+
+router.get('/logout', async (req, res) => {
+    req.session.destroy(err => {
+        if (err) res.status(500).json({err})
+        res.status(200).json({success: true})
+    })
+})
 
 router.post('/reset', emailValidators, async (req, res) => {
     try {
