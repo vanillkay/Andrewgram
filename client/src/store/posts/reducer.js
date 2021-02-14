@@ -12,15 +12,19 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case postsActionTypes.TOGGLE_LIKE_POST: {
 
-            const {id, likeOwner} = action.payload;
+            const {id, likeOwner, isUserPost} = action.payload;
 
-            const neededPost = state.posts.find(item => +item.id === +id);
+            const neededPostsArr = isUserPost ? 'userPosts' : 'posts';
 
-            const isInLikes = neededPost.likesAmount.findIndex(item => item.owner.toString() === likeOwner.toString());
+            const neededPost = state[neededPostsArr].find(item => +item.id === +id);
+
+            console.log(neededPost)
+
+            const isInLikes = neededPost.likes.findIndex(item => item.owner.toString() === likeOwner.toString());
             if (isInLikes !== -1) {
-                neededPost.likesAmount.splice(isInLikes, 1);
+                neededPost.likes.splice(isInLikes, 1);
             } else {
-                neededPost.likesAmount.push({owner: likeOwner})
+                neededPost.likes.push({owner: likeOwner})
             }
             neededPost.isLiked = !neededPost.isLiked;
             return {...state, posts: [...state.posts]};

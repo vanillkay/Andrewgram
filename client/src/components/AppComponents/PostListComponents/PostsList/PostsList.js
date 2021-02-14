@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import Post from "../PostComponents/Post/Post";
 import {useDispatch, useSelector} from "react-redux";
-import * as postsSelector from "../../../../store/posts/selectors";
 import * as postsActions from '../../../../store/posts/actions';
 import {getUserInfo} from "../../../../store/user/selectors";
 import {loadSubsPosts} from "../../../../store/posts/operations";
+import {getPosts} from "../../../../store/posts/selectors";
 
 const PostsList = () => {
 
-    const serverPosts = useSelector(postsSelector.getPosts);
+    const serverPosts = useSelector(getPosts);
 
     const dispatch = useDispatch();
 

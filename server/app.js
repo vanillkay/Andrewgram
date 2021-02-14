@@ -18,6 +18,7 @@ const keys = require('../keys');
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const postsRoutes = require('./routes/posts.routes');
+const userRoutes = require('./routes/user.routes');
 
 
 const MongoStore = require('connect-mongodb-session')(session);
@@ -69,6 +70,7 @@ app.use(userMiddleware);
 app.use('/auth', authRoutes);
 app.use('/post', postRoutes);
 app.use('/posts', postsRoutes);
+app.use('/user', userRoutes);
 
 
 app.get('/csrf', csrfProtection, (req, res) => {

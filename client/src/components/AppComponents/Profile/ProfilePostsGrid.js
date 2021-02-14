@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         display: 'grid',
         marginTop: '2rem',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gridTemplateRows: 'repeat(3, 1fr)',
+        gridTemplateRows: 'repeat(2, 1fr)',
         gridColumnGap: '2rem',
         gridRowGap: '2rem'
     },
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     'profile__modal-post': {
-        width: '70%',
+        width: '50%',
         height: 'auto',
         outline: 'none'
     },
@@ -38,11 +38,13 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const ProfilePostsGrid = () => {
+const ProfilePostsGrid = (props) => {
 
     const [isPostOpen, setIsPostOpen] = useState(false);
     const [modalInfo, setModalInfo] = useState(false);
     const classes = useStyles();
+
+    const {user, isLoading} = props;
 
     const posts = useSelector(getUserPosts);
 
@@ -63,10 +65,13 @@ const ProfilePostsGrid = () => {
     return (
         <>
             <div className={classes['profile__posts']}>
-                {isLoaded && posts.map((item, index) => <ProfilePost key={index} imgSrc={item.imageSrc} info={item.info}
-                                                                     comments={item.comments} likes={item.likes}
-                                                                     ownerLogin={item.ownerLogin} open={openModal}/>)}
-                {!isLoaded && loadingPostsArr.map(() => <ProfilePost isLoading/>)}
+                {!isLoading && posts.map(item => <ProfilePost key={item._id}
+                                                              id={item._id} avatar={user.avatar} imgSrc={item.imageSrc}
+                                                              info={item.info}
+                                                              comments={item.comments} likes={item.likes}
+                                                              ownerLogin={item.ownerLogin} open={openModal}/>)}
+                {!isLoading && !posts.length && <div className={classes['profile__posts-exist']}>Постов нету</div>}
+                {isLoading && loadingPostsArr.map((item, index) => <ProfilePost key={index} isLoading/>)}
             </div>
             {
                 isPostOpen &&
@@ -79,7 +84,7 @@ const ProfilePostsGrid = () => {
                     closeAfterTransition
                     BackdropComponent={Backdrop}>
                     <div className={classes['profile__modal-post']}>
-                        <Post info={modalInfo}/>
+                        <Post isUserPost={true} info={modalInfo}/>
                     </div>
                 </Modal>
             }

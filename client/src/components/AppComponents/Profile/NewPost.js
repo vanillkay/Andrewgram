@@ -79,8 +79,6 @@ const NewPost = () => {
 
     const dispatch = useDispatch();
 
-
-
     const handleOpen = () => {
         setIsNewPost(true)
     }
@@ -96,13 +94,10 @@ const NewPost = () => {
                 return
             }
             if (isError) setIsError(false);
-
             let formData = new FormData()
             formData.append('avatar', fileInput.current.files[0]);
             formData.set('user', 'andrew');
             formData.set('info', newPostInfo);
-
-
 
             const res = await fetch('/post/new', {
                 method: 'post',
@@ -111,9 +106,7 @@ const NewPost = () => {
 
             const data = await res.json();
 
-
             if (data.post){
-                console.log('data',data.post)
                 dispatch(addUserPost(data.post));
                 setIsNewPost(false);
                 setNewPostInfo('');

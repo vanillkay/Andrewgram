@@ -1,10 +1,9 @@
 import React from 'react';
 import ProfileRef from "./ProfileRef/ProfileRef";
 import {useSelector} from "react-redux";
-import {getUserInfo} from "../../../store/user/selectors";
-import {useParams} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
+import {getLoading, getRecommended} from "../../../store/subscribers/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile-info': {
@@ -23,20 +22,25 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileInfo = (props) => {
 
-    const {isLoading} = props;
+    const {isLoading, isOwn} = props;
 
-    const user = useSelector(getUserInfo);
 
-    const {login} = useParams();
+    const {user} = props;
 
-    const isOwn = login === user.login;
 
-    const classes = useStyles()
+    const classes = useStyles();
+
+    const recommended = useSelector(getRecommended);
+
+    const isLoadingSubs = useSelector(getLoading)
+
+    const userProfType = recommended.find(item => item.login === user.login) ? 'recommended' : 'subscription';
+
 
 
     return (
         <div className={classes['profile-info']}>
-            {!isLoading && (isOwn ? <ProfileRef login={user.login} isPageComp isOwn={true}/> : <ProfileRef  isPageComp login={user.login}/>)}
+            {!isLoading && <ProfileRef type={isOwn ? '' : userProfType} isLoading={isLoadingSubs} login={user.login} avatar={user.avatar || ''} isPageComp isOwn={isOwn}/>}
             {isLoading &&
             <div className={classes['profile-loading']}>
                 <Skeleton animation={'wave'} variant="circle" height={'5rem'} width={'5rem'}/>

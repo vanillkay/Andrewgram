@@ -16,6 +16,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    avatar: String,
     posts: {
         items: [
             {
@@ -33,6 +34,7 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
+            avatar: String
         }
     ],
     subscribers: [
@@ -41,6 +43,15 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
+        }
+    ],
+    recommended: [
+        {
+            login: {
+                type: String,
+                required: true
+            },
+            avatar: String
         }
     ]
 })

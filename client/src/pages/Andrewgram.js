@@ -2,6 +2,7 @@ import React from 'react';
 import PostsList from "../components/AppComponents/PostListComponents/PostsList/PostsList";
 import {makeStyles} from "@material-ui/core/styles";
 import SideProfileInfo from "../components/AppComponents/SideProfileInfoComponents/SideProfileInfo/SideProfileInfo";
+import Loader from "../components/Loaders/Loader";
 
 const useStyles = makeStyles(theme => ({
     'main': {
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme => ({
             width: '40%',
             maxWidth: '700px',
         },
-        'main__profile-info':{
+        'main__profile-info': {
             width: '20%',
             marginLeft: '2rem',
             position: 'sticky',
@@ -44,16 +45,21 @@ const useStyles = makeStyles(theme => ({
 const Andrewgram = () => {
 
     const classes = useStyles();
-    return (
-        <div className={classes.main}>
-            <div className={classes['main__posts']}>
-                <PostsList/>
-            </div>
-            <div className={classes['main__profile-info']}>
-                <SideProfileInfo/>
-            </div>
 
-        </div>
+    const isLoadingInfo = false;
+
+    return (
+        <>
+            {isLoadingInfo ? <Loader/> : <div className={classes.main}>
+                <div className={classes['main__posts']}>
+                    <PostsList/>
+                </div>
+                <div className={classes['main__profile-info']}>
+                    <SideProfileInfo/>
+                </div>
+            </div>}
+        </>
+
     );
 };
 

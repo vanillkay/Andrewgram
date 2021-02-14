@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const router = Router();
-const Post = require('../models/post');
+const User = require('../models/user');
 
 
 router.post('/users', async (req, res) => {
@@ -10,10 +10,12 @@ router.post('/users', async (req, res) => {
         if (login === req.user.login){
             const user = await req.user.populate('posts.items.post').execPopulate();
             const filteredPosts = user.posts.items.map(item => item.post);
-            console.log(filteredPosts);
             res.status(200).json(filteredPosts)
         }else{
-            res.status(200).json({posts: 'hello'})
+            const user = await User.findOne({login})
+            const userWithPosts = await user.populate('posts.items.post').execPopulate();
+            const filteredPosts = userWithPosts.posts.items.map(item => item.post);
+            res.status(200).json(filteredPosts)
         }
     }catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})

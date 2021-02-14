@@ -56,13 +56,23 @@ router.post('/login', loginValidators, async (req, res) => {
 
         const user = await User.findOne({login});
 
+        const allUsers = await User.find({});
+
+        const subs = user.subscriptions.map(item => ({login: item.login}));
+
+        const filteredUser = allUsers.filter(item => item.login !== user.login && !subs.some(el => el.login === item.login));
+
+        const recommended = filteredUser.map(item => ({login: item.login, avatar: item.avatar}))
+
         const userInfo = {
             email: user.email,
             name: user.name,
             login: user.login,
             subscriptions: user.subscriptions,
             posts: user.posts,
-            subscribers: user.subscribers
+            subscribers: user.subscribers,
+            avatar: user.avatar,
+            recommended
         }
 
         req.session.user = user;

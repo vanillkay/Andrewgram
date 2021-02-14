@@ -16,6 +16,7 @@ import PostIcons from "../PostIcons/PostIcons";
 import NewComment from "../NewComment/NewComment";
 import {getUserInfo} from "../../../../../store/user/selectors";
 import {Link} from "react-router-dom";
+import {writeNewComment} from "../../../../../store/posts/actions";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,9 +27,14 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '3px'
     },
     media: {
+        maxHeight: '60vh',
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         '& img': {
             width: '100%',
-            height: 'auto',
+            height: '100%',
         }
     },
     'post-info':{
@@ -47,10 +53,11 @@ const Post = (props) => {
 
     const {
         info,
+        isUserPost = false,
         loading = false,
     } = props;
 
-    const {isLiked, id, likes, text,comments, ownerLogin} = info;
+    const {isLiked, id, likes, text, comments, ownerLogin, avatar = ''} = info;
 
 
     const [isComment, setIsComment] = useState(false);
@@ -63,10 +70,12 @@ const Post = (props) => {
 
     const dispatch = useDispatch();
 
-    const userInfo = useSelector(getUserInfo)
+    const user = useSelector(getUserInfo)
+
+    console.log(id)
 
     const toggleLike = () => {
-        dispatch(postsActions.toggleLike(id, userInfo.login));
+        dispatch(postsActions.toggleLike(id, user.login, isUserPost));
     }
 
 
@@ -75,8 +84,7 @@ const Post = (props) => {
     }
 
     const loadComment = (comment) => {
-
-        dispatch(postsActions.writeNewComment(id, {owner: 'andrew', comment}))
+        dispatch(writeNewComment(id, {owner: user.login, comment}))
         setAnimationSide('left');
         setIsComment(false);
         setTimeout(() => {
@@ -94,17 +102,15 @@ const Post = (props) => {
                         <Skeleton animation="wave" variant="circle" width={40} height={40}/>
                     ) : (
                         <Avatar
-                            alt="Ted talk"
-                            src="https://pbs.twimg.com/profile_images/877631054525472768/Xp5FAPD5_reasonably_small.jpg"
+                            alt={text}
+                            src={'/' + avatar}
                         />
                     )
                 }
                 title={
                     loading ? (
                         <Skeleton animation="wave" height={10} width="80%" style={{marginBottom: 6}}/>
-                    ) : (
-                        'Ted'
-                    )
+                    ) : ownerLogin
                 }
                 subheader={loading ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
             />
@@ -140,7 +146,7 @@ const Post = (props) => {
                         <PostComments comments={comments}/>
                         <Slide in={isComment} direction={animationSide} mountOnEnter
                                unmountOnExit>
-                            <NewComment loadComment={loadComment} isLoading={isLoading}/>
+                            <NewComment avatar={avatar} login={ownerLogin} loadComment={loadComment} isLoading={isLoading}/>
                         </Slide>
                     </>
                 )}

@@ -17,7 +17,7 @@ const SideProfileInfo = () => {
     const classes = useStyles();
     return (
         <div className={classes['profile-info']}>
-            <ProfileRef isOwn login={user.login}/>
+            <ProfileRef isOwn avatar={user.avatar} login={user.login}/>
             <SubscribeSection/>
         </div>
     );

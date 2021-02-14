@@ -8,3 +8,8 @@ export const authUser = (userInfo) => ({
 export const logoutUser = () => ({
     type: userActionTypes.LOGOUT_USER,
 })
+
+export const setUserAvatar = (avatar) => ({
+    type: userActionTypes.SET_USER_AVATAR,
+    payload: avatar
+})

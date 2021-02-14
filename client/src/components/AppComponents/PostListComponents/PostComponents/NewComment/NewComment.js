@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewComment = React.forwardRef((props, forwardRef) => {
 
-    const {isLoading, loadComment} = props;
+    const {isLoading, loadComment, avatar} = props;
 
     const [comment, setComment] = useState('');
 
@@ -65,8 +65,8 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                     <Button disabled={isLoading} className={classes['comment-btn']} disableRipple
                             onClick={() => alert('hello')}>
                         <Avatar
-                            alt="Ted talk"
-                            src="https://pbs.twimg.com/profile_images/877631054525472768/Xp5FAPD5_reasonably_small.jpg"
+                            alt="Avatar"
+                            src={'/' + avatar}
                         />
                     </Button>
                 </Grid>

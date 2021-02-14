@@ -1,6 +1,8 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import ProfileRef from "../../Profile/ProfileRef/ProfileRef";
+import {useSelector} from "react-redux";
+import {getLoading} from "../../../../store/subscribers/selectors";
 
 
 const useStyles = makeStyles((theme, info) => ({
@@ -38,6 +40,8 @@ const Subscribes = (props = []) => {
 
     const classes = useStyles({type});
 
+    const isLoading = useSelector(getLoading)
+
 
     return (
         <div className={classes['subscribe-section']}>
@@ -46,6 +50,8 @@ const Subscribes = (props = []) => {
                 {subscribers.map((item, index) =>
                     <ProfileRef key={index}
                                 type={type}
+                                avatar={item.avatar}
+                                isLoading = {isLoading}
                                 avatarClass={classes['subscribe-section__profile']}
                                 login={item.login}/>)}
                 {!subscribers.length && <div

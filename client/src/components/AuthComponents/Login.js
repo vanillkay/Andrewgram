@@ -6,7 +6,7 @@ import {useHttp} from "../../hooks/http.hook";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {authUser} from "../../store/user/actions";
-import {setSubscriptions} from "../../store/subscribers/actions";
+import {setRecommended, setSubscriptions} from "../../store/subscribers/actions";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +98,6 @@ const Login = (props) => {
 
             if (!isValid) return;
 
-            console.log(inputs)
 
             const user = await request('/auth/login', 'post', inputs);
 
@@ -115,9 +114,8 @@ const Login = (props) => {
             }
 
             dispatch(authUser(user));
-            console.log(user);
             dispatch(setSubscriptions(user.userInfo.subscriptions));
-            console.log(user);
+            dispatch(setRecommended(user.userInfo.recommended));
         } catch (e) {
             if (e.message.toLowerCase().includes('пароль')) {
                 setError(prevState => ({...prevState, password: true}))

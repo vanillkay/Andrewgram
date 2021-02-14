@@ -3,12 +3,8 @@ import * as subscribesActionTypes from './types'
 
 const initialState = {
     subscription: [],
-    recommended: [
-        {login: 'kate'},
-        {login: 'vlad'},
-        {login: 'aleks'},
-        {login: 'sofia'},
-    ]
+    recommended: [],
+    isLoading: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +12,7 @@ const reducer = (state = initialState, action) => {
         case subscribesActionTypes.TOGGLE_SUBS:{
 
             const {login, type} = action.payload;
+
 
             const arrToAddSubs = type === 'subscription' ? 'recommended' : 'subscription';
             const subscribedProfile = state[type].find(item => item.login === login);
@@ -27,6 +24,13 @@ const reducer = (state = initialState, action) => {
         case subscribesActionTypes.SET_SUBSCRIPTIONS: {
 
             return {...state, subscription: action.payload}
+        }
+        case subscribesActionTypes.SET_RECOMMENDED_PROFILES: {
+
+            return {...state, recommended: action.payload}
+        }
+        case subscribesActionTypes.TOGGLE_LOADING: {
+            return {...state, isLoading: !state.isLoading}
         }
     }
     return state

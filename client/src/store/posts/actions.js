@@ -10,7 +10,7 @@ export const writeNewComment = (postId, comment) => ({
     payload: {postId, comment}
 })
 
-export const setUserPost = (posts) => ({
+export const setUserPosts = (posts) => ({
     type: postsActionTypes.SET_USER_POSTS,
     payload: posts
 })
