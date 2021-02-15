@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Skeleton} from "@material-ui/lab";
 import {
     Avatar,
@@ -16,13 +16,14 @@ import PostIcons from "../PostIcons/PostIcons";
 import NewComment from "../NewComment/NewComment";
 import {getUserInfo} from "../../../../../store/user/selectors";
 import {Link} from "react-router-dom";
-import {writeNewComment} from "../../../../../store/posts/actions";
+import {toggleLoadingLike, toggleLoadingPost, writeNewComment} from "../../../../../store/posts/actions";
+import {useHttp} from "../../../../../hooks/http.hook";
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, props) => ({
     post: {
         width: '100%',
-        marginBottom: '2rem',
+        marginBottom: props => props.isModal === true ? '' : '2rem',
         border: '1px solid rgb(219, 219, 219)',
         borderRadius: '3px'
     },
@@ -37,14 +38,20 @@ const useStyles = makeStyles((theme) => ({
             height: '100%',
         }
     },
-    'post-info':{
+    'post-info': {
         margin: '1rem 0 0 1rem',
-        '& a':{
+        '& a': {
             textDecoration: 'none',
             color: 'inherit',
             fontWeight: 'bold',
             marginRight: '.3rem'
         }
+    },
+    'post-line': {
+        height: '3px',
+        // width: '50%',
+        margin: '1rem 0 1rem 1rem',
+        backgroundColor: 'rgb(219, 219, 219)'
     }
 }));
 
@@ -52,9 +59,11 @@ const useStyles = makeStyles((theme) => ({
 const Post = (props) => {
 
     const {
+        setModalInfo,
+        handleClose,
         info,
         isUserPost = false,
-        loading = false,
+        loadingPost = false,
     } = props;
 
     const {isLiked, id, likes, text, comments, ownerLogin, avatar = ''} = info;
@@ -66,15 +75,21 @@ const Post = (props) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const classes = useStyles();
+    const classes = useStyles({isModal: !!setModalInfo});
 
     const dispatch = useDispatch();
 
-    const user = useSelector(getUserInfo)
+    const user = useSelector(getUserInfo);
 
-    console.log(id)
+    const {request} = useHttp()
+
 
     const toggleLike = () => {
+        dispatch(toggleLoadingLike());
+        request('/post/like', 'post', {id, likerLogin: user.login})
+            .then(res => console.log(res))
+            .finally(() => dispatch(toggleLoadingLike()))
+        setModalInfo(prevState => ({...prevState, isLiked: !prevState.isLiked}))
         dispatch(postsActions.toggleLike(id, user.login, isUserPost));
     }
 
@@ -84,21 +99,40 @@ const Post = (props) => {
     }
 
     const loadComment = (comment) => {
-        dispatch(writeNewComment(id, {owner: user.login, comment}))
-        setAnimationSide('left');
-        setIsComment(false);
-        setTimeout(() => {
-            setAnimationSide('right');
-        }, 500)
-
+        dispatch(toggleLoadingPost())
+        request('/post/comment', 'post', {id, owner: user.login, comment})
+            .then(res => console.log(res))
+        // dispatch(writeNewComment(isUserPost, id, {owner: user.login, comment}))
+        // setAnimationSide('left');
+        // setIsComment(false);
+        // setTimeout(() => {
+        //     setAnimationSide('right');
+        // }, 500)
     }
+
+
+    const toggleLikePost = e => {
+        const targetData = e.target.dataset;
+        if (targetData.type === 'post' && targetData.info) {
+            toggleLike()
+        }
+    }
+
+    useEffect(() => {
+        if (isUserPost) {
+            document.addEventListener('dblclick', toggleLikePost);
+            return () => {
+                document.removeEventListener('dblclick', toggleLikePost);
+            }
+        }
+    }, [])
 
 
     return (
         <Card className={classes.post}>
             <CardHeader
                 avatar={
-                    loading ? (
+                    loadingPost ? (
                         <Skeleton animation="wave" variant="circle" width={40} height={40}/>
                     ) : (
                         <Avatar
@@ -108,13 +142,13 @@ const Post = (props) => {
                     )
                 }
                 title={
-                    loading ? (
+                    loadingPost ? (
                         <Skeleton animation="wave" height={10} width="80%" style={{marginBottom: 6}}/>
                     ) : ownerLogin
                 }
-                subheader={loading ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
+                subheader={loadingPost ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
             />
-            {loading ? (
+            {loadingPost ? (
                 <Skeleton animation="wave" variant="rect" className={classes.media}/>
             ) : (
                 <div className={classes.media}>
@@ -129,7 +163,7 @@ const Post = (props) => {
             )}
 
             <CardContent>
-                {loading ? (
+                {loadingPost ? (
                     <>
                         <Skeleton animation="wave" height={10} style={{marginBottom: 6}}/>
                         <Skeleton animation="wave" height={10} width="80%"/>
@@ -139,14 +173,18 @@ const Post = (props) => {
                         <PostIcons isLoading={isLoading} isComment={isComment} isLiked={isLiked} toggleLike={toggleLike}
                                    toggleComment={toggleComment}/>
                         <Likes likes={likes}/>
-                        <div className={classes['post-info']}><Link  to={{pathname: '/profile/' + ownerLogin,
+                        <div className={classes['post-info']}><Link to={{
+                            pathname: '/profile/' + ownerLogin,
                             state: {
                                 fromNotifications: false
-                            }}}>{ownerLogin}</Link>{text}</div>
+                            }
+                        }}>{ownerLogin}</Link>{text}</div>
+                        <div className={classes['post-line']}/>
                         <PostComments comments={comments}/>
                         <Slide in={isComment} direction={animationSide} mountOnEnter
                                unmountOnExit>
-                            <NewComment avatar={avatar} login={ownerLogin} loadComment={loadComment} isLoading={isLoading}/>
+                            <NewComment avatar={avatar} login={ownerLogin} loadComment={loadComment}
+                                        isLoading={isLoading}/>
                         </Slide>
                     </>
                 )}

@@ -23,7 +23,6 @@ const PostsList = () => {
 
 
     useEffect(() => {
-        dispatch(loadSubsPosts());
         document.addEventListener('dblclick', toggleLikePost);
         return () => {
             document.removeEventListener('dblclick', toggleLikePost);

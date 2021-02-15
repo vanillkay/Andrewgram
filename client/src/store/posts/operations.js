@@ -7,7 +7,7 @@ import {useHttp} from "../../hooks/http.hook";
 export const loadSubsPosts = () => (dispatch, getState) => {
     const state = getState();
     const login = state.user.userInfo.login;
-    console.log('state',state);
+    // console.log('state',state);
 }
 
 // export const getUsersPosts = (login) => {

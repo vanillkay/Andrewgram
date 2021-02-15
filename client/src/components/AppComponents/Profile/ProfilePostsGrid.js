@@ -19,12 +19,17 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        height: '100vh',
+        overflowY: 'visible',
+        position: 'absolute'
+
 
     },
     'profile__modal-post': {
         width: '50%',
         height: 'auto',
-        outline: 'none'
+        outline: 'none',
+        position: 'relative'
     },
     'profile__posts-exist': {
         textAlign: 'center',
@@ -55,12 +60,14 @@ const ProfilePostsGrid = (props) => {
         setIsPostOpen(false);
     }
 
+
     const openModal = (info) => {
-        setIsPostOpen(true);
         setModalInfo(info);
+        setIsPostOpen(true);
     }
 
     const loadingPostsArr = [1, 2, 3, 4, 5, 6];
+
 
     return (
         <>
@@ -68,6 +75,7 @@ const ProfilePostsGrid = (props) => {
                 {!isLoading && posts.map(item => <ProfilePost key={item._id}
                                                               id={item._id} avatar={user.avatar} imgSrc={item.imageSrc}
                                                               info={item.info}
+                                                              isLiked={item.isLiked}
                                                               comments={item.comments} likes={item.likes}
                                                               ownerLogin={item.ownerLogin} open={openModal}/>)}
                 {!isLoading && !posts.length && <div className={classes['profile__posts-exist']}>Постов нету</div>}
@@ -84,7 +92,7 @@ const ProfilePostsGrid = (props) => {
                     closeAfterTransition
                     BackdropComponent={Backdrop}>
                     <div className={classes['profile__modal-post']}>
-                        <Post isUserPost={true} info={modalInfo}/>
+                        <Post isUserPost={true} handleClose={handleClose} setModalInfo={setModalInfo} info={modalInfo}/>
                     </div>
                 </Modal>
             }

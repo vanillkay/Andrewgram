@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Collapse} from "@material-ui/core";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
 
@@ -45,16 +46,16 @@ const PostComments = (props) => {
                     (
                         <>
                             <p className={classes.comment}>
-                                <a href={'/' + comments[0].owner}>{comments[0].owner}</a>
-                                <span>{comments[0].comment}</span>
+                                <Link to={'/profile/' + comments[0].owner}>{comments[0].owner}</Link>
+                                <span>{comments[0].text}</span>
                             </p>
                             <Collapse mountOnEnter unmountOnExit in={isAllComments}>
                                 {
                                     comments.map((item, index) => {
                                         if (!index) return;
                                         return (<p key={item.owner} className={classes.comment}>
-                                            <a href={'/' + item.owner}>{item.owner}</a>
-                                            <span>{item.comment}</span>
+                                            <Link to={'/profile/' + item.owner}>{item.owner}</Link>
+                                            <span>{item.text}</span>
                                         </p>)
 
                                     })
@@ -72,8 +73,8 @@ const PostComments = (props) => {
 
                     (comments.map(item =>
                         <p key={item.owner} className={classes.comment}>
-                            <a href="#">{item.owner}</a>
-                            <span>{item.comment}</span>
+                            <Link to={'/profile/' + item.owner}>{item.owner}</Link>
+                            <span>{item.text}</span>
                         </p>))
             }
         </div>

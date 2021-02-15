@@ -5,6 +5,8 @@ import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutline
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import ChatBubbleOutlineOutlinedIcon from "@material-ui/icons/ChatBubbleOutlineOutlined";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSelector} from "react-redux";
+import {getPostCommentLoading, getPostLikeLoading} from "../../../../../store/posts/selectors";
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,10 +22,12 @@ const PostIcons = (props) => {
     const {isLoading, isLiked, toggleLike, isComment, toggleComment} = props;
 
 
+    const isLikeLoading = useSelector(getPostLikeLoading);
+
     const classes = useStyles();
     return (
         <>
-            <IconButton disabled={isLoading} onClick={toggleLike} aria-label="add to favorites">
+            <IconButton disabled={isLikeLoading} onClick={toggleLike} aria-label="add to favorites">
                 {isLiked ? <FavoriteIcon className={classes['like-active']}/> :
                     <FavoriteBorderOutlinedIcon className={classes.like}/>}
             </IconButton>

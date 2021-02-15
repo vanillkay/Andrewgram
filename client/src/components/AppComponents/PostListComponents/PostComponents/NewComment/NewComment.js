@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Avatar, Button, CircularProgress, FormControl, Grid, Input, InputAdornment} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSelector} from "react-redux";
+import {getPostCommentLoading} from "../../../../../store/posts/selectors";
 
 const useStyles = makeStyles(theme => ({
     'new-comment': {
@@ -56,6 +58,8 @@ const NewComment = React.forwardRef((props, forwardRef) => {
         loadComment(comment);
     }
 
+    const isPostLoading = useSelector(getPostCommentLoading);
+
     const classes = useStyles();
     return (
         <div className={classes['new-comment']} ref={forwardRef}>
@@ -83,7 +87,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                             placeholder="Добавьте комментарий..."
                             endAdornment={
                                 <InputAdornment position="end">
-                                    <Button disabled={isLoading} onClick={addComment}
+                                    <Button disabled={isPostLoading} onClick={addComment}
                                             className={classes['comment-btn']}
                                             disableRipple>Опубликовать</Button>
                                 </InputAdornment>

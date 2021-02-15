@@ -18,9 +18,10 @@ const useStyles = makeStyles(theme => ({
 
 const ProfilePost = (props) => {
 
-    const {isLoading = false, open, imgSrc, info, comments, avatar, ownerLogin, likes, id} = props;
+    const {isLoading = false, open, isLiked, imgSrc, info, comments, avatar, ownerLogin, likes, id} = props;
 
     const classes = useStyles();
+
 
     return (
         <>
@@ -30,7 +31,7 @@ const ProfilePost = (props) => {
                         <Skeleton animation="wave" variant="rect" style={{width: '20rem', height: '20rem'}}/>
                     </div>
                     :
-                    <div className={classes['profile-post']} onClick={() => open({imgSrc, comments, avatar, text: info, ownerLogin, likes, id})}>
+                    <div className={classes['profile-post']} onClick={() => open({imgSrc, comments, avatar, text: info, ownerLogin, likes, id, isLiked})}>
                         <img className={classes['profile-post__img']} src={"/" + imgSrc} alt={'post-image'}/>
                     </div>
             }

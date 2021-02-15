@@ -22,4 +22,15 @@ router.post('/users', async (req, res) => {
         console.log(e);
     }
 })
+
+
+router.post('/all', async (req, res) => {
+    try{
+        const {login} = req.body;
+
+    }catch (e) {
+        res.status(500).json({message: 'Серверная ошибка'})
+        console.log(e);
+    }
+})
 module.exports =  router;

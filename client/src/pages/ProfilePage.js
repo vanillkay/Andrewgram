@@ -41,8 +41,8 @@ useEffect(() => {
         dispatch(setUserPosts([]));
     }
     request('/posts/users', 'post', {login})
-        .then(res => dispatch(setUserPosts(res)));
-}, [])
+        .then(res => dispatch(setUserPosts(res, user.login)));
+}, [login])
 
 
 
