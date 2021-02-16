@@ -64,7 +64,9 @@ router.post('/comment', async (req, res) => {
 
         await post.save();
 
-        res.status(200).json({success: true})
+        const newComment = post.comments[post.comments.length - 1];
+
+        res.status(200).json({comment: newComment})
     }catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})
         console.log(e);

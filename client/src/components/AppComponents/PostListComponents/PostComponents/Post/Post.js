@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme, props) => ({
         border: '1px solid rgb(219, 219, 219)',
         borderRadius: '3px'
     },
+    'post__profile__name': {
+        fontWeight: 'bold',
+        textDecoration: 'none',
+        color: 'inherit',
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    },
     media: {
         maxHeight: '60vh',
         overflow: 'hidden',
@@ -66,7 +74,7 @@ const Post = (props) => {
         loadingPost = false,
     } = props;
 
-    const {isLiked, id, likes, text, comments, ownerLogin, avatar = ''} = info;
+    const {isLiked, id, imgSrc, likes, text, comments, ownerLogin, avatar = ''} = info;
 
 
     const [isComment, setIsComment] = useState(false);
@@ -87,10 +95,11 @@ const Post = (props) => {
     const toggleLike = () => {
         dispatch(toggleLoadingLike());
         request('/post/like', 'post', {id, likerLogin: user.login})
-            .then(res => console.log(res))
+            .then(res => {
+                if (isUserPost) setModalInfo(prevState => ({...prevState, isLiked: !prevState.isLiked}))
+                dispatch(postsActions.toggleLike(id, user.login, isUserPost));
+            })
             .finally(() => dispatch(toggleLoadingLike()))
-        setModalInfo(prevState => ({...prevState, isLiked: !prevState.isLiked}))
-        dispatch(postsActions.toggleLike(id, user.login, isUserPost));
     }
 
 
@@ -101,13 +110,15 @@ const Post = (props) => {
     const loadComment = (comment) => {
         dispatch(toggleLoadingPost())
         request('/post/comment', 'post', {id, owner: user.login, comment})
-            .then(res => console.log(res))
-        // dispatch(writeNewComment(isUserPost, id, {owner: user.login, comment}))
-        // setAnimationSide('left');
-        // setIsComment(false);
-        // setTimeout(() => {
-        //     setAnimationSide('right');
-        // }, 500)
+            .then(res => {
+                dispatch(writeNewComment(isUserPost, id, {...res.comment}))
+                setAnimationSide('left');
+                setIsComment(false);
+                setTimeout(() => {
+                    setAnimationSide('right');
+                }, 500)
+            }).finally(() => dispatch(toggleLoadingPost()))
+
     }
 
 
@@ -144,9 +155,11 @@ const Post = (props) => {
                 title={
                     loadingPost ? (
                         <Skeleton animation="wave" height={10} width="80%" style={{marginBottom: 6}}/>
-                    ) : ownerLogin
+                    ) : <Link className={classes['post__profile__name']} to={'/profile/' + ownerLogin}>
+                        {ownerLogin}
+                    </Link>
                 }
-                subheader={loadingPost ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
+                // subheader={loadingPost ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
             />
             {loadingPost ? (
                 <Skeleton animation="wave" variant="rect" className={classes.media}/>
@@ -155,7 +168,7 @@ const Post = (props) => {
                     <CardMedia
                         component={"img"}
                         title="Ted talk"
-                        src={'/' + info.imgSrc}
+                        src={'/' + imgSrc}
                         data-type={'post'}
                         data-info={id}
                     />
@@ -183,7 +196,7 @@ const Post = (props) => {
                         <PostComments comments={comments}/>
                         <Slide in={isComment} direction={animationSide} mountOnEnter
                                unmountOnExit>
-                            <NewComment avatar={avatar} login={ownerLogin} loadComment={loadComment}
+                            <NewComment avatar={user.avatar} login={ownerLogin} loadComment={loadComment}
                                         isLoading={isLoading}/>
                         </Slide>
                     </>
@@ -191,7 +204,7 @@ const Post = (props) => {
             </CardContent>
         </Card>
     )
-}
+};
 
 
 export default Post;

@@ -3,10 +3,11 @@ import PostsList from "../components/AppComponents/PostListComponents/PostsList/
 import {makeStyles} from "@material-ui/core/styles";
 import SideProfileInfo from "../components/AppComponents/SideProfileInfoComponents/SideProfileInfo/SideProfileInfo";
 import Loader from "../components/Loaders/Loader";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getAllPostsLoading} from "../store/posts/selectors";
 import {useHttp} from "../hooks/http.hook";
 import {getUserInfo} from "../store/user/selectors";
+import {setAllPosts, toggleAllPostsLoading} from "../store/posts/actions";
 
 const useStyles = makeStyles(theme => ({
     'main': {
@@ -52,14 +53,20 @@ const Andrewgram = () => {
 
     const {request} = useHttp();
 
-    const isLoadingInfo = !useSelector(getAllPostsLoading);
+    const isLoadingInfo = useSelector(getAllPostsLoading);
+
+    const dispatch = useDispatch();
 
     const user = useSelector(getUserInfo)
 
-    // useEffect(() => {
-    //     request('/posts/all', 'post', {login: user.login})
-    //         .then(res => console.log(res))
-    // }, [])
+    useEffect(() => {
+        dispatch(toggleAllPostsLoading());
+        request('/posts/all', 'post', {login: user.login})
+            .then(res => {
+                dispatch(setAllPosts(res.posts, user.login))
+                dispatch(toggleAllPostsLoading());
+            })
+    }, [])
 
     return (
         <>

@@ -4,5 +4,6 @@ module.exports = {
     PORT: process.env.PORT,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
-    BASE_URL: process.env.BASE_URL
+    BASE_URL: process.env.BASE_URL,
+    TYPE: process.env.TYPE
 }

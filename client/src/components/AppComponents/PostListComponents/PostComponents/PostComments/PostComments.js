@@ -39,6 +39,7 @@ const PostComments = (props) => {
 
     const classes = useStyles();
 
+
     return (
         <div className={classes.comments}>
             {
@@ -53,7 +54,7 @@ const PostComments = (props) => {
                                 {
                                     comments.map((item, index) => {
                                         if (!index) return;
-                                        return (<p key={item.owner} className={classes.comment}>
+                                        return (<p key={item._id} className={classes.comment}>
                                             <Link to={'/profile/' + item.owner}>{item.owner}</Link>
                                             <span>{item.text}</span>
                                         </p>)

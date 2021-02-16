@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const {validationResult} = require('express-validator');
 const {registerValidators, loginValidators, resetPasswordValidators, emailValidators} = require('../utils/validators');
 
-const keys = require('../../keys');
+const keys = require('../keys');
 const resetEmail = require('../emails/reset');
 
 

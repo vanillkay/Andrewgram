@@ -27,3 +27,12 @@ export const toggleLoadingLike = () => ({
 export const toggleLoadingPost = () => ({
     type: postsActionTypes.TOGGLE_COMMENT_POST_LOADING
 })
+
+export const toggleAllPostsLoading = () => ({
+    type: postsActionTypes.TOGGLE_ALL_POST_LOADING
+})
+
+export const setAllPosts = (posts, login) => ({
+    type: postsActionTypes.SET_ALL_POSTS,
+    payload: {posts, login}
+})

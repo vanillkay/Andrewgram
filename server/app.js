@@ -4,15 +4,14 @@ const app = express();
 const mongoose = require('mongoose');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser')
-const helmet = require('helmet');
 const path = require('path');
 const fileMiddleware = require('./middlewares/file');
 const userMiddleware = require('./middlewares/user');
 const session = require('express-session');
-
+const compression = require('compression');
 
 //keys variables
-const keys = require('../keys');
+const keys = require('./keys');
 
 
 const authRoutes = require('./routes/auth.routes');
@@ -28,7 +27,11 @@ const store = new MongoStore({
 })
 
 
+
+app.use(compression());
+
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/images',express.static(path.join(__dirname, 'images')));
 app.use(fileMiddleware.single('avatar'))
 
@@ -42,30 +45,10 @@ app.use(session({
 app.use(express.json());
 const csrfProtection = csrf({cookie: true});
 app.use(cookieParser());
-app.use(helmet());
+
 
 app.use(userMiddleware);
 
-
-
-
-// app.use(helmet.contentSecurityPolicy({
-//     directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',],
-//         styleSrc: ["'self'", 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css'],
-//         imgSrc: ["'self'", '*']
-//     }
-// }));
-
-// app.use(csrfProtection, (req, res, next) => {
-//
-//     const token = req.csrfToken();
-//     res.cookie('XSRF-TOKEN', token);
-//     res.locals.csrfToken = token;
-//
-//     next();
-// });
 
 app.use('/auth', authRoutes);
 app.use('/post', postRoutes);
@@ -76,6 +59,13 @@ app.use('/user', userRoutes);
 app.get('/csrf', csrfProtection, (req, res) => {
     res.json({token: req.csrfToken()})
 })
+
+if (keys.TYPE !== 'DEV'){
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+    })
+}
 
 
 

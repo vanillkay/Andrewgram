@@ -2,6 +2,7 @@ import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Fade, Modal, Backdrop} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
+import {Link} from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => ({
@@ -97,7 +98,7 @@ const Likes = (props) => {
                                        className={classes['all-likes__close-btn']}/>
                         </div>
                         <div className={classes['all-likes__list']}>
-                            {likes.map((item, index) => <p key={index}>{item.owner}</p>)}
+                            {likes.map((item, index) => <Link style={{textDecoration: 'none', marginTop: '1rem',display: 'block', fontWeight: 'bold', color: 'inherit'}} key={index} to={'/profile/' + item.owner}>{item.owner}</Link>)}
                         </div>
                     </div>
                 </Fade>

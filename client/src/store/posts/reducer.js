@@ -4,7 +4,7 @@ import * as postsActionTypes from './types';
 const initialState = {
     posts: [],
     userPosts: [],
-    isLoadingAllPosts: true,
+    isLoadingAllPosts: false,
     isLoadedUserPosts: false,
     isLikedPost: false,
     isCommentPost: false,
@@ -12,6 +12,16 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case postsActionTypes.SET_ALL_POSTS:{
+
+            const {posts, login} = action.payload;
+
+            const userPosts = posts.map(item => ({...item, isLiked: !!item.likes.find(item => item.owner === login)}));
+            return {...state, posts: userPosts}
+        }
+        case postsActionTypes.TOGGLE_ALL_POST_LOADING:{
+            return {...state, isLoadingAllPosts: !state.isLoadingAllPosts}
+        }
         case postsActionTypes.TOGGLE_LIKE_POST: {
 
             const {id, likeOwner, isUserPost = false} = action.payload;
@@ -41,9 +51,7 @@ const reducer = (state = initialState, action) => {
 
             const neededPostsArr = isUserPost === true ? 'userPosts' : 'posts';
 
-            console.log(postId)
             const neededPost = state[neededPostsArr].find(item => item._id === postId);
-
 
             neededPost.comments.push(comment)
             return {...state, posts: [...state.posts]}
@@ -55,6 +63,7 @@ const reducer = (state = initialState, action) => {
 
             return {...state, userPosts, isLoadedUserPosts: true}
         }
+
         case postsActionTypes.ADD_USER_POST: {
             state.userPosts.push(action.payload)
             return {...state, userPosts: [...state.userPosts]}
