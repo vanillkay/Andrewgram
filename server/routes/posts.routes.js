@@ -35,8 +35,6 @@ router.post('/all', async (req, res) => {
 
         const neededPostOwnerAvatars = user.subscriptions.map(item => ({avatar: item.avatar, login: item.login}));
 
-        console.log(neededPostOwnerAvatars)
-
 
         const neededPosts = await Post.find({ownerLogin: neededPostsOwners});
 

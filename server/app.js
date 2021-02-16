@@ -30,7 +30,7 @@ const store = new MongoStore({
 
 app.use(compression());
 
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/images',express.static(path.join(__dirname, 'images')));
 app.use(fileMiddleware.single('avatar'))
@@ -61,7 +61,7 @@ app.get('/csrf', csrfProtection, (req, res) => {
 })
 
 if (keys.TYPE !== 'DEV'){
-
+    app.use(express.static(path.join(__dirname, 'public')));
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
     })
