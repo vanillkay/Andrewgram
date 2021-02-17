@@ -19,17 +19,27 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
     },
     'new-comment-field': {
-        marginTop: '0.5rem',
-        flexWrap: 'wrap',
+        marginTop: '1rem',
+        flexWrap: 'nowrap',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     'new-comment-input': {
         padding: '1rem',
         boxSizing: 'border-box',
     },
     'comment-btn': {
+        fontSize: '.7rem',
+        wordWrap: 'break-word',
         '&:hover': {
             backgroundColor: 'rgba(0,0,0,0)',
         }
+    },
+    'comment-error': {
+        color: theme.colors.error,
+        textAlign: 'center',
+        marginTop: '1rem'
     },
     '@media (min-width: 600px)': {
         'new-comment-input': {
@@ -39,6 +49,9 @@ const useStyles = makeStyles(theme => ({
         },
         'new-comment-field': {
             flexWrap: 'nowrap',
+        },
+        'comment-btn': {
+            fontSize: '.8rem',
         }
     }
 }))
@@ -50,11 +63,19 @@ const NewComment = React.forwardRef((props, forwardRef) => {
     const [comment, setComment] = useState('');
 
 
+    const [isError, setIsError] = useState(false);
+
+
     const handleCommentInput = (e) => {
+        if (isError) setIsError(false)
         setComment(e.target.value);
     }
 
     const addComment = () => {
+        if (!!!comment.length) {
+            setIsError(true);
+            return;
+        }
         loadComment(comment);
     }
 
@@ -66,13 +87,10 @@ const NewComment = React.forwardRef((props, forwardRef) => {
             <Grid container className={classes['new-comment-field']} spacing={1}
                   alignItems="flex-end">
                 <Grid item>
-                    <Button disabled={isLoading} className={classes['comment-btn']} disableRipple
-                            onClick={() => alert('hello')}>
-                        <Avatar
-                            alt="Avatar"
-                            src={'/' + avatar}
-                        />
-                    </Button>
+                    <Avatar
+                        alt="Avatar"
+                        src={'/' + avatar}
+                    />
                 </Grid>
                 <Grid className={classes['new-comment-input']} item>
                     <FormControl fullWidth variant="outlined">
@@ -84,7 +102,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                             multiline
                             style={{width: '100%'}}
                             id="filled-adornment-password"
-                            placeholder="Добавьте комментарий..."
+                            placeholder=""
                             endAdornment={
                                 <InputAdornment position="end">
                                     <Button disabled={isPostLoading} onClick={addComment}
@@ -94,6 +112,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                             }
                         />
                     </FormControl>
+                    {isError && <div className={classes['comment-error']}>Введите сначала комментарий</div>}
                 </Grid>
                 <Grid item>
                 </Grid>

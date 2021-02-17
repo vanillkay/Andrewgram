@@ -3,6 +3,7 @@ import ProfilePost from "./ProfilePost";
 import {makeStyles} from "@material-ui/core/styles";
 import {Backdrop, Modal} from "@material-ui/core";
 import Post from "../PostListComponents/PostComponents/Post/Post";
+
 import {useSelector} from "react-redux";
 import {getUserPosts, getUserPostsLoaded} from "../../../store/posts/selectors";
 
@@ -10,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     'profile__posts': {
         display: 'grid',
         marginTop: '2rem',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(1, 1fr)',
         gridTemplateRows: 'repeat(2, 1fr)',
         gridColumnGap: '2rem',
         gridRowGap: '2rem'
@@ -19,17 +20,16 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
-        overflowY: 'visible',
-        position: 'absolute'
-
-
+        overflowY: 'scroll',
+        width: '100vw',
     },
     'profile__modal-post': {
-        width: '50%',
+        width: '80%',
         height: 'auto',
         outline: 'none',
-        position: 'relative'
+        position: 'absolute',
+        top: '1rem',
+        padding: '1rem 0'
     },
     'profile__posts-exist': {
         textAlign: 'center',
@@ -40,6 +40,18 @@ const useStyles = makeStyles(theme => ({
         gridColumnEnd: 5,
         gridRowStart: 2,
         gridRowEnd: 3,
+    },
+    '@media (min-width: 600px)': {
+        'profile__posts': {
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateRows: 'repeat(2, 1fr)',
+        },
+        'profile__modal-post': {
+            width: '50%',
+            height: 'auto',
+            outline: 'none',
+            position: 'relative'
+        }
     }
 }))
 
@@ -69,6 +81,7 @@ const ProfilePostsGrid = (props) => {
     const loadingPostsArr = [1, 2, 3, 4, 5, 6];
 
 
+
     return (
         <>
             <div className={classes['profile__posts']}>
@@ -85,11 +98,17 @@ const ProfilePostsGrid = (props) => {
                 isPostOpen &&
                 <Modal
                     disableAutoFocus
-                    disableEnforceFocus
+                    disableEnforceFocus={true}
+                    disableRestoreFocus={true}
+                    disablePortal={true}
                     className={classes.modal}
                     open={isPostOpen}
                     onClose={handleClose}
+                    onClick={(event) => {if (event.target.tagName === 'A'){
+                        handleClose()
+                    }}}
                     closeAfterTransition
+                    disableScrollLock={true}
                     BackdropComponent={Backdrop}>
                     <div className={classes['profile__modal-post']}>
                         <Post isUserPost={true} handleClose={handleClose} setModalInfo={setModalInfo} info={modalInfo}/>

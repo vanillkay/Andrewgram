@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     'profile': {
         display: 'flex',
         alignItems: 'center',
+        flexDirection:  props => props.isPage ? 'column' : 'row',
         justifyContent: 'space-between',
         width: '100%'
     },
@@ -38,8 +39,8 @@ const useStyles = makeStyles(theme => ({
         }
     },
     'profile__sbsc-btn': {
-        fontSize: '.8rem',
-        margin: '0 1rem .2rem 0',
+        fontSize: '1rem',
+        margin: props => props.isPage ? '1rem 0 0' : '0 1rem .2rem 0',
         textTransform: 'none',
         color: props => props.type === 'subscription' ? '' : theme.colors.main,
         '&:hover': {
@@ -48,7 +49,20 @@ const useStyles = makeStyles(theme => ({
     },
     'profile__logout-btn': {
         minWidth: '5rem',
-        minHeight: '2rem'
+        minHeight: '2rem',
+        marginTop: '1rem'
+    },
+    '@media (min-width: 600px)':{
+        'profile': {
+            flexDirection:  () => 'row',
+        },
+        'profile__logout-btn': {
+            marginTop: '0'
+        },
+        'profile__sbsc-btn': {
+            fontSize: '.8rem',
+            margin: '0 1rem .2rem 0',
+        }
     }
 }))
 
@@ -97,7 +111,7 @@ const ProfileRef = (props) => {
             })
     }
 
-    const classes = useStyles({type, isOwn});
+    const classes = useStyles({type, isOwn, isPage: isPageComp});
 
     return (
         <div className={classes.profile}>

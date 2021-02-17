@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
     'profile-post':{
-        height: '20rem',
+        height: '10rem',
         overflowY: 'hidden',
         position: 'relative',
         display: 'flex',
@@ -13,7 +13,13 @@ const useStyles = makeStyles(theme => ({
     },
     'profile-post__img': {
         width: '100%', height: 'auto',
+    },
+    '@media (min-width: 600px)':{
+        'profile-post': {
+            height: '20rem',
+        }
     }
+
 }))
 
 const ProfilePost = (props) => {

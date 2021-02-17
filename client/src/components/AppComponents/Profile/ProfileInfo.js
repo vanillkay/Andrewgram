@@ -7,7 +7,7 @@ import {getLoading, getRecommended} from "../../../store/subscribers/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile-info': {
-        paddingLeft: '10rem',
+        paddingLeft: '1rem',
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center'
@@ -17,6 +17,20 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'flex-start'
+    },
+    '@media (min-width: 600px)':{
+        'profile-info': {
+            paddingLeft: '10rem',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center'
+        },
+        'profile-loading': {
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'flex-start'
+        },
     }
 }))
 
