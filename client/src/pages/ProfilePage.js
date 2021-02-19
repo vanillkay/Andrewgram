@@ -54,7 +54,7 @@ const ProfilePage = () => {
                 dispatch(setUserPosts(res.posts, user.login))
                 dispatch(setVisitedUserInfo(res.userInfo))
             });
-    }, [])
+    }, [login])
 
 
     return (
