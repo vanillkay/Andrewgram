@@ -9,6 +9,11 @@ import {setUserPosts} from "../store/posts/actions";
 import {useParams} from "react-router-dom";
 import {getUserInfo} from "../store/user/selectors";
 import {getRecommended, getSubscriptions} from "../store/subscribers/selectors";
+import {setVisitedUserInfo} from "../store/user/actions";
+import smoothscroll from 'smoothscroll-polyfill';
+
+smoothscroll.polyfill();
+
 
 const useStyles = makeStyles(theme => ({
     'profile-page': {
@@ -36,18 +41,20 @@ const ProfilePage = () => {
     const isOwn = login === user.login;
 
 
-useEffect(() => {
-    if (!isOwn){
-        dispatch(setUserPosts([]));
-    }
-    request('/posts/users', 'post', {login})
-        .then(res => {
-            dispatch(setUserPosts(res, user.login))
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
         });
-}, [login])
-
-
-
+        if (!isOwn) {
+            dispatch(setUserPosts([]));
+        }
+        request('/posts/users', 'post', {login})
+            .then(res => {
+                dispatch(setUserPosts(res.posts, user.login))
+                dispatch(setVisitedUserInfo(res.userInfo))
+            });
+    }, [])
 
 
     return (

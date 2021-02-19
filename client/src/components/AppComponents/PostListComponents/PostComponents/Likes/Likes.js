@@ -98,7 +98,14 @@ const Likes = (props) => {
                                        className={classes['all-likes__close-btn']}/>
                         </div>
                         <div className={classes['all-likes__list']}>
-                            {likes.map((item, index) => <Link style={{textDecoration: 'none', marginTop: '1rem',display: 'block', fontWeight: 'bold', color: 'inherit'}} key={index} to={'/profile/' + item.owner}>{item.owner}</Link>)}
+                            {likes.map((item, index) => <Link style={{
+                                textDecoration: 'none',
+                                marginTop: '1rem',
+                                display: 'block',
+                                fontWeight: 'bold',
+                                color: 'inherit'
+                            }} key={index} to={'/profile/' + item.owner}>{item.owner}</Link>)}
+                            {!likes.length && <div>Лайков пока что нет</div>}
                         </div>
                     </div>
                 </Fade>

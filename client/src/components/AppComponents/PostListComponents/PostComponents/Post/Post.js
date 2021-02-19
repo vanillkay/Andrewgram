@@ -186,12 +186,13 @@ const Post = (props) => {
                         <PostIcons isLoading={isLoading} isComment={isComment} isLiked={isLiked} toggleLike={toggleLike}
                                    toggleComment={toggleComment}/>
                         <Likes likes={likes}/>
-                        <div className={classes['post-info']}><Link to={{
+                        {text && text.length !== 0 && <div className={classes['post-info']}><Link to={{
                             pathname: '/profile/' + ownerLogin,
                             state: {
                                 fromNotifications: false
                             }
-                        }}>{ownerLogin}</Link>{text}</div>
+                        }}>{ownerLogin}</Link>{text}</div>}
+
                         <div className={classes['post-line']}/>
                         <PostComments comments={comments}/>
                         <Slide in={isComment} direction={animationSide} mountOnEnter

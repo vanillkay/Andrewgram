@@ -43,6 +43,7 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
+            avatar: String
         }
     ],
     recommended: [

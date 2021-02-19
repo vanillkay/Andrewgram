@@ -3,20 +3,21 @@ import {Avatar, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {toggleLoading, toggleSubs} from "../../../../store/subscribers/actions";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {useHttp} from "../../../../hooks/http.hook";
-import {logoutUser} from "../../../../store/user/actions";
+import {logoutUser, toggleUserSubs} from "../../../../store/user/actions";
 import NewAvatar from "../NewAvatar";
-import {getUserInfo} from "../../../../store/user/selectors";
-import {getRecommended} from "../../../../store/subscribers/selectors";
+import {getUserInfo, getVisitedUserInfo} from "../../../../store/user/selectors";
+import ProfileSubs from "../ProfileSubs";
 
 const useStyles = makeStyles(theme => ({
     'profile': {
         display: 'flex',
         alignItems: 'center',
-        flexDirection:  props => props.isPage ? 'column' : 'row',
+        flexDirection: props => props.isPage ? 'column' : 'row',
         justifyContent: 'space-between',
-        width: '100%'
+        width: '100%',
+        marginTop: props => props.isList ? '1rem' : '',
     },
     'profile__info': {
         display: 'flex',
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     },
     'profile__sbsc-btn': {
         fontSize: '1rem',
-        margin: props => props.isPage ? '1rem 0 0' : '0 1rem .2rem 0',
+        marginRight: '.5rem',
         textTransform: 'none',
         color: props => props.type === 'subscription' ? '' : theme.colors.main,
         '&:hover': {
@@ -52,16 +53,25 @@ const useStyles = makeStyles(theme => ({
         minHeight: '2rem',
         marginTop: '1rem'
     },
-    '@media (min-width: 600px)':{
+    'profile__subs-list': {
+        marginTop: '1rem',
+        fontWeight: 'bold',
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    },
+    '@media (min-width: 600px)': {
         'profile': {
-            flexDirection:  () => 'row',
+            flexDirection: () => 'row',
         },
         'profile__logout-btn': {
             marginTop: '0'
         },
         'profile__sbsc-btn': {
             fontSize: '.8rem',
-            margin: '0 1rem .2rem 0',
+        },
+        'profile__subs-list': {
+            marginTop: 0
         }
     }
 }))
@@ -75,7 +85,8 @@ const ProfileRef = (props) => {
         isLoading,
         isPageComp = false,
         avatar = '',
-        login = 'andrew'
+        login = 'andrew',
+        isList = false
     } = props;
 
     const dispatch = useDispatch();
@@ -86,13 +97,15 @@ const ProfileRef = (props) => {
 
     const user = useSelector(getUserInfo);
 
+    const visitedUser = useSelector(getVisitedUserInfo);
 
     const toggleSubsBtn = () => {
         dispatch(toggleLoading());
         request('/user/subs', 'post', {login, avatar: avatar, type, userLogin: user.login})
             .then(res => {
                 if (res.success) {
-                    dispatch(toggleSubs({login, type}))
+                    dispatch(toggleSubs({login, type}));
+                    dispatch(toggleUserSubs({login, avatar}))
                 }
             }).finally(() => {
             dispatch(toggleLoading());
@@ -111,7 +124,9 @@ const ProfileRef = (props) => {
             })
     }
 
-    const classes = useStyles({type, isOwn, isPage: isPageComp});
+
+
+    const classes = useStyles({type, isOwn, isPage: isPageComp, isList});
 
     return (
         <div className={classes.profile}>
@@ -121,25 +136,28 @@ const ProfileRef = (props) => {
                         <Avatar className={avatarClass || classes['profile__avatar']} src={'/' + avatar}/>
                         <div className={classes['profile__name']}>{login}</div>
                     </div>
+                    {isPageComp &&
+                    <ProfileSubs className={classes['profile__subs-list']} ownUser={user}
+                                 user={isOwn ? user : visitedUser}/>
+                    }
                     {isOwn && <Button variant={"contained"}
                                       color={"primary"}
                                       onClick={() => setNewAvatar(true)}
                                       disabled={loading}
                                       className={classes['profile__logout-btn']}>Изменить аватар</Button>}</> :
-                <Link to={'profile/' + login} className={classes['profile__info']}>
-                    <Avatar alt="Avatar" className={avatarClass || classes['profile__avatar']} src={avatar}/>
+                <Link to={{pathname: '/profile/' + login}} className={classes['profile__info']}>
+                    <Avatar alt="Avatar" className={avatarClass || classes['profile__avatar']} src={'/' + avatar}/>
                     <div className={classes['profile__name']}>{login}</div>
                 </Link>}
-            {isOwn ? <Button variant={"contained"}
-                             color={"primary"}
-                             onClick={logout}
-                             disabled={loading}
-                             className={classes['profile__logout-btn']}>Выйти</Button> :
+            {isOwn ? (!isList && <Button variant={"contained"}
+                                         color={"primary"}
+                                         onClick={logout}
+                                         disabled={loading}
+                                         className={classes['profile__logout-btn']}>Выйти</Button>) :
                 <Button disableRipple disabled={isLoading} onClick={toggleSubsBtn}
                         className={classes['profile__sbsc-btn']}>{btnText}</Button>
             }
             {isNewAvatar && <NewAvatar login={login} open={setNewAvatar}/>}
-
         </div>
     );
 };

@@ -11,12 +11,15 @@ router.post('/users', async (req, res) => {
         if (login === req.user.login) {
             const user = await req.user.populate('posts.items.post').execPopulate();
             const filteredPosts = user.posts.items.map(item => item.post);
-            res.status(200).json(filteredPosts)
+            res.status(200).json({posts: filteredPosts})
         } else {
             const user = await User.findOne({login})
             const userWithPosts = await user.populate('posts.items.post').execPopulate();
             const filteredPosts = userWithPosts.posts.items.map(item => item.post);
-            res.status(200).json(filteredPosts)
+            res.status(200).json({
+                posts: filteredPosts,
+                userInfo: {subscriptions: user.subscriptions || [], subscribers: user.subscribers || []}
+            })
         }
     } catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})

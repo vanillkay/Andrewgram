@@ -28,15 +28,22 @@ router.post('/subs', async (req, res) => {
         const {login, avatar, type, userLogin} = req.body;
 
         const user = await User.findOne({login: userLogin});
+
+        const subsUser = await User.findOne({login});
         if (type === 'recommended'){
             user.subscriptions = [{login, avatar}, ...user.subscriptions];
+            subsUser.subscribers = [...subsUser.subscribers, {login: userLogin, avatar: user.avatar}]
 
         }else if (type === 'subscription'){
             const deleted = user.subscriptions.findIndex(item => item.login === login);
             user.subscriptions.splice(deleted, 1);
+
+            const deletedRecommended =  subsUser.subscribers.findIndex(item => item.login === userLogin);
+            subsUser.subscribers.splice(deletedRecommended, 1);
         }
 
         await user.save();
+        await subsUser.save()
 
         res.status(200).json({success: true})
     } catch (e) {
