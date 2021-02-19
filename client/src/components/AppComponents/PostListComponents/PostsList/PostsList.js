@@ -1,11 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Post from "../PostComponents/Post/Post";
 import {useDispatch, useSelector} from "react-redux";
 import * as postsActions from '../../../../store/posts/actions';
 import {getUserInfo} from "../../../../store/user/selectors";
 import {getPosts} from "../../../../store/posts/selectors";
 import {useHttp} from "../../../../hooks/http.hook";
-import {toggleLoadingLike} from "../../../../store/posts/actions";
+import {setAllPosts, toggleLoadingLike} from "../../../../store/posts/actions";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {CircularProgress} from "@material-ui/core";
 
 const PostsList = () => {
 
@@ -14,6 +16,8 @@ const PostsList = () => {
     const dispatch = useDispatch();
 
     const user = useSelector(getUserInfo);
+
+    const [isAllPosts, setIsAllPosts] = useState(false);
 
 
     const {request} = useHttp();
@@ -31,6 +35,14 @@ const PostsList = () => {
         }
     }
 
+    const loadPosts = async () => {
+        const res = await request('/posts/all', 'post', {login: user.login, length: serverPosts.length + 3});
+        dispatch(setAllPosts(res.posts, user.login));
+        if (res.isAllPosts) {
+            setIsAllPosts(true)
+        }
+    }
+
 
     useEffect(() => {
         document.addEventListener('dblclick', toggleLikePost);
@@ -40,9 +52,18 @@ const PostsList = () => {
     }, [])
 
     return (
-        <div>
+        <InfiniteScroll
+            next={loadPosts} hasMore={!isAllPosts}
+            loader={<CircularProgress style={{margin: '1rem auto', display: 'block'}} color="primary"/>}
+            dataLength={serverPosts.length}
+            endMessage={
+                <p style={{textAlign: 'center'}}>
+                    <b>На этом все!</b>
+                </p>
+            }
+        >
             {
-                serverPosts.map((item, index) => <Post info={{
+                serverPosts.map(item => <Post info={{
                     isLiked: !!item.isLiked,
                     likes: item.likes,
                     comments: item.comments,
@@ -51,7 +72,7 @@ const PostsList = () => {
                     imgSrc: item.imageSrc,
                     ownerLogin: item.ownerLogin
                 }}
-                                                       key={index}/>)
+                                              key={item._id}/>)
             }
             {
                 !serverPosts.length && <div style={{
@@ -59,10 +80,9 @@ const PostsList = () => {
                     textAlign: 'center',
                     textTransform: 'uppercase',
                     marginTop: '5rem'
-                }}>постов пока что нету</div>
+                }}>Публикаций пока что нету</div>
             }
-
-        </div>
+        </InfiniteScroll>
     );
 };
 

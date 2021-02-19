@@ -5,20 +5,20 @@ const Post = require('../models/post');
 
 
 router.post('/users', async (req, res) => {
-    try{
+    try {
         const {login} = req.body;
 
-        if (login === req.user.login){
+        if (login === req.user.login) {
             const user = await req.user.populate('posts.items.post').execPopulate();
             const filteredPosts = user.posts.items.map(item => item.post);
             res.status(200).json(filteredPosts)
-        }else{
+        } else {
             const user = await User.findOne({login})
             const userWithPosts = await user.populate('posts.items.post').execPopulate();
             const filteredPosts = userWithPosts.posts.items.map(item => item.post);
             res.status(200).json(filteredPosts)
         }
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})
         console.log(e);
     }
@@ -26,8 +26,8 @@ router.post('/users', async (req, res) => {
 
 
 router.post('/all', async (req, res) => {
-    try{
-        const {login} = req.body;
+    try {
+        const {login, length} = req.body;
 
         const user = await User.findOne({login});
 
@@ -39,7 +39,6 @@ router.post('/all', async (req, res) => {
         const neededPosts = await Post.find({ownerLogin: neededPostsOwners});
 
 
-
         const posts = [...neededPosts].map(item => {
             const avatar = neededPostOwnerAvatars.find(elem => elem.login === item.ownerLogin).avatar;
 
@@ -47,11 +46,16 @@ router.post('/all', async (req, res) => {
         })
 
 
+        if (length <= posts.length) {
+            posts.length = length;
+            res.status(200).json({posts, isAllPosts: false});
+        } else {
+            res.status(200).json({posts, isAllPosts: true});
+        }
 
-        res.status(200).json({posts})
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})
         console.log(e);
     }
 })
-module.exports =  router;
+module.exports = router;

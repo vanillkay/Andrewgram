@@ -61,7 +61,7 @@ const Andrewgram = () => {
 
     useEffect(() => {
         dispatch(toggleAllPostsLoading());
-        request('/posts/all', 'post', {login: user.login})
+        request('/posts/all', 'post', {login: user.login, length: 3})
             .then(res => {
                 dispatch(setAllPosts(res.posts, user.login))
                 dispatch(toggleAllPostsLoading());
