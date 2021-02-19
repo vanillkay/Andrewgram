@@ -12,7 +12,7 @@ import {getRecommended, getSubscriptions} from "../store/subscribers/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile-page': {
-        padding: '4rem 2rem 0',
+        padding: '4rem 2rem',
         margin: '0 auto'
     }
 }))
