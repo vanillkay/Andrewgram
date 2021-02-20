@@ -53,7 +53,7 @@ const ProfilePage = () => {
             .then(res => {
                 dispatch(setUserPosts(res.posts, user.login))
                 dispatch(setVisitedUserInfo(res.userInfo))
-            });
+            }).catch(() => {});
     }, [login])
 
 

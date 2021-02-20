@@ -68,9 +68,8 @@ const reducer = (state = initialState, action) => {
             state.userPosts.push(action.payload)
             return {...state, userPosts: [...state.userPosts]}
         }
-
+        default: return state;
     }
-    return state;
 }
 
 export default reducer;

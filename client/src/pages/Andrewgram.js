@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PostsList from "../components/AppComponents/PostListComponents/PostsList/PostsList";
 import {makeStyles} from "@material-ui/core/styles";
 import SideProfileInfo from "../components/AppComponents/SideProfileInfoComponents/SideProfileInfo/SideProfileInfo";
-import Loader from "../components/Loaders/Loader";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllPostsLoading} from "../store/posts/selectors";
 import {useHttp} from "../hooks/http.hook";
@@ -57,7 +56,9 @@ const Andrewgram = () => {
 
     const dispatch = useDispatch();
 
-    const user = useSelector(getUserInfo)
+    const user = useSelector(getUserInfo);
+
+    const app = useRef();
 
     useEffect(() => {
         dispatch(toggleAllPostsLoading());
@@ -65,19 +66,21 @@ const Andrewgram = () => {
             .then(res => {
                 dispatch(setAllPosts(res.posts, user.login))
                 dispatch(toggleAllPostsLoading());
-            })
+            }).catch(() => {
+        })
     }, [])
+
 
     return (
         <>
-            {isLoadingInfo ? <Loader/> : <div className={classes.main}>
+            <div ref={app} className={classes.main}>
                 <div className={classes['main__posts']}>
-                    <PostsList/>
+                    <PostsList isLoading={isLoadingInfo}/>
                 </div>
                 <div className={classes['main__profile-info']}>
                     <SideProfileInfo/>
                 </div>
-            </div>}
+            </div>
         </>
 
     );

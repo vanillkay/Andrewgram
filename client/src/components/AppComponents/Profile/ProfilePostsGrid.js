@@ -5,7 +5,7 @@ import {Backdrop, Modal} from "@material-ui/core";
 import Post from "../PostListComponents/PostComponents/Post/Post";
 
 import {useSelector} from "react-redux";
-import {getUserPosts, getUserPostsLoaded} from "../../../store/posts/selectors";
+import {getUserPosts} from "../../../store/posts/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile__posts': {
@@ -65,8 +65,6 @@ const ProfilePostsGrid = (props) => {
 
     const posts = useSelector(getUserPosts);
 
-    const isLoaded = useSelector(getUserPostsLoaded);
-
 
     const handleClose = () => {
         setIsPostOpen(false);
@@ -88,6 +86,7 @@ const ProfilePostsGrid = (props) => {
                 {!isLoading && posts.map(item => <ProfilePost key={item._id}
                                                               id={item._id} avatar={user.avatar} imgSrc={item.imageSrc}
                                                               info={item.info}
+                                                              created={item.created}
                                                               isLiked={item.isLiked}
                                                               comments={item.comments} likes={item.likes}
                                                               ownerLogin={item.ownerLogin} open={openModal}/>)}

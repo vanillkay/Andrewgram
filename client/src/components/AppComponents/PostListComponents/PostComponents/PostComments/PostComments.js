@@ -22,11 +22,11 @@ const useStyles = makeStyles(theme => ({
             marginRight: '0.5rem',
             textDecoration: 'none',
             transition: '.3s',
-            '&:hover':{
+            '&:hover': {
                 textDecoration: 'underline'
             }
         },
-        '&:last-of-type':{
+        '&:last-of-type': {
             marginBottom: '0'
         }
     },
@@ -52,21 +52,19 @@ const PostComments = (props) => {
                             </p>
                             <Collapse mountOnEnter unmountOnExit in={isAllComments}>
                                 {
-                                    comments.map((item, index) => {
-                                        if (!index) return;
-                                        return (<p key={item._id} className={classes.comment}>
+                                    comments.map((item) =>
+                                        <p key={item._id} className={classes.comment}>
                                             <Link to={'/profile/' + item.owner}>{item.owner}</Link>
                                             <span>{item.text}</span>
-                                        </p>)
-
-                                    })
+                                        </p>
+                                    )
                                 }
                             </Collapse>
                             <Button
                                 disableRipple
                                 className={classes['show-all-comment-btn']}
                                 onClick={() => setIsAllComments(prevState => !prevState)}>
-                                {isAllComments ? 'Скрыть' : `Показать больше (${comments.length - 1 })`}
+                                {isAllComments ? 'Скрыть' : `Показать больше (${comments.length - 1})`}
                             </Button>
 
                         </>

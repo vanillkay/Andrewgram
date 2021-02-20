@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 
 const ProfilePost = (props) => {
 
-    const {isLoading = false, open, isLiked, imgSrc, info, comments, avatar, ownerLogin, likes, id} = props;
+    const {isLoading = false, open, isLiked, created, imgSrc, info, comments, avatar, ownerLogin, likes, id} = props;
 
     const classes = useStyles();
 
@@ -64,12 +64,12 @@ const ProfilePost = (props) => {
             {
                 isLoading ?
                     <div>
-                        <Skeleton animation="wave" variant="rect" style={{width: '20rem', height: '20rem'}}/>
+                        <Skeleton animation="wave" variant="rect" style={{width: '100%', height: '20rem'}}/>
                     </div>
                     :
                     <div className={classes['profile-post']}
-                         onClick={() => open({imgSrc, comments, avatar, text: info, ownerLogin, likes, id, isLiked})}>
-                        <img className={classes['profile-post__img']} src={"/" + imgSrc} alt={'post-image'}/>
+                         onClick={() => open({imgSrc,created, comments, avatar, text: info, ownerLogin, likes, id, isLiked})}>
+                        <img className={classes['profile-post__img']} src={"/" + imgSrc} alt='post-image'/>
                         <div className={classes['profile-post__hover']}>
                             <FavoriteIcon className={classes['profile-post__icons-prev']}/>{likes.length}
                             <ChatBubbleIcon className={classes['profile-post__icons-prev']}/>{comments.length}

@@ -9,6 +9,7 @@ import {logoutUser, toggleUserSubs} from "../../../../store/user/actions";
 import NewAvatar from "../NewAvatar";
 import {getUserInfo, getVisitedUserInfo} from "../../../../store/user/selectors";
 import ProfileSubs from "../ProfileSubs";
+import {setAllPosts, toggleAllPostsLoading} from "../../../../store/posts/actions";
 
 const useStyles = makeStyles(theme => ({
     'profile': {
@@ -107,7 +108,8 @@ const ProfileRef = (props) => {
                     dispatch(toggleSubs({login, type}));
                     dispatch(toggleUserSubs({login, avatar}))
                 }
-            }).finally(() => {
+            }).catch(() => {
+        }).finally(() => {
             dispatch(toggleLoading());
         });
 
@@ -121,9 +123,9 @@ const ProfileRef = (props) => {
                 if (res.success) {
                     dispatch(logoutUser());
                 }
-            })
+            }).catch(() => {
+        })
     }
-
 
 
     const classes = useStyles({type, isOwn, isPage: isPageComp, isList});

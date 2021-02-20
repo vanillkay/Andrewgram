@@ -9,7 +9,9 @@ import {setAllPosts, toggleLoadingLike} from "../../../../store/posts/actions";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {CircularProgress} from "@material-ui/core";
 
-const PostsList = () => {
+const PostsList = (props) => {
+
+    const {isLoading} = props;
 
     const serverPosts = useSelector(getPosts);
 
@@ -30,7 +32,8 @@ const PostsList = () => {
             request('/post/like', 'post', {id: targetData.info, likerLogin: user.login})
                 .then(res => {
                     dispatch(postsActions.toggleLike(targetData.info, user.login));
-                })
+                }).catch(() => {
+            })
                 .finally(() => dispatch(toggleLoadingLike()))
         }
     }
@@ -51,38 +54,43 @@ const PostsList = () => {
         }
     }, [])
 
+    const loading = [1, 2, 3];
+
     return (
-        <InfiniteScroll
-            next={loadPosts} hasMore={!isAllPosts}
-            loader={<CircularProgress style={{margin: '1rem auto', display: 'block'}} color="primary"/>}
-            dataLength={serverPosts.length}
-            endMessage={
-                <p style={{textAlign: 'center'}}>
-                    <b>На этом все!</b>
-                </p>
-            }
-        >
-            {
-                serverPosts.map(item => <Post info={{
-                    isLiked: !!item.isLiked,
-                    likes: item.likes,
-                    comments: item.comments,
-                    id: item._id,
-                    avatar: item.avatar,
-                    imgSrc: item.imageSrc,
-                    ownerLogin: item.ownerLogin
-                }}
-                                              key={item._id}/>)
-            }
-            {
-                !serverPosts.length && <div style={{
-                    fontSize: '2rem',
-                    textAlign: 'center',
-                    textTransform: 'uppercase',
-                    marginTop: '5rem'
-                }}>Публикаций пока что нету</div>
-            }
-        </InfiniteScroll>
+        <>
+            {isLoading ? loading.map((item, index) => <Post key={index} loadingPost={true}/>) : <InfiniteScroll
+                next={loadPosts} hasMore={!isAllPosts}
+                loader={<CircularProgress style={{margin: '1rem auto', display: 'block'}} color="primary"/>}
+                dataLength={serverPosts.length}
+                endMessage={
+                    <p style={{textAlign: 'center'}}>
+                        <b>На этом все!</b>
+                    </p>
+                }
+            >
+                {
+                    serverPosts.map(item => <Post info={{
+                        isLiked: !!item.isLiked,
+                        likes: item.likes,
+                        comments: item.comments,
+                        id: item._id,
+                        avatar: item.avatar,
+                        imgSrc: item.imageSrc,
+                        ownerLogin: item.ownerLogin,
+                        created: item.created
+                    }}
+                                                  key={item._id}/>)
+                }
+                {
+                    !serverPosts.length && <div style={{
+                        fontSize: '2rem',
+                        textAlign: 'center',
+                        textTransform: 'uppercase',
+                        marginTop: '5rem'
+                    }}>Публикаций пока что нету</div>
+                }
+            </InfiniteScroll>}
+        </>
     );
 };
 

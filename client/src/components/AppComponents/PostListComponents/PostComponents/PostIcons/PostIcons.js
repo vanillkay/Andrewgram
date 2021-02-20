@@ -19,10 +19,12 @@ const useStyles = makeStyles(theme => ({
 
 const PostIcons = (props) => {
 
-    const {isLoading, isLiked, toggleLike, isComment, toggleComment} = props;
+    const {isLiked, toggleLike, isComment, toggleComment} = props;
 
 
     const isLikeLoading = useSelector(getPostLikeLoading);
+
+    const isComLoading = useSelector(getPostCommentLoading);
 
     const classes = useStyles();
     return (
@@ -31,7 +33,7 @@ const PostIcons = (props) => {
                 {isLiked ? <FavoriteIcon className={classes['like-active']}/> :
                     <FavoriteBorderOutlinedIcon className={classes.like}/>}
             </IconButton>
-            <IconButton disabled={isLoading} onClick={toggleComment} aria-label="add comment">
+            <IconButton disabled={isComLoading} onClick={toggleComment} aria-label="add comment">
                 {isComment ? <ChatBubbleIcon color={'action'}/> : <ChatBubbleOutlineOutlinedIcon/>}
             </IconButton>
         </>

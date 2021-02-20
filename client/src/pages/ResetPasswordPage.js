@@ -32,7 +32,7 @@ const ResetPasswordPage = () => {
                 } else {
                     history.push('/auth');
                 }
-            })
+            }).catch(() => {})
     }, [])
 
 

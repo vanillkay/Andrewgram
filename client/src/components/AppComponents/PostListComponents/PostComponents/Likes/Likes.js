@@ -51,6 +51,11 @@ const useStyles = makeStyles(theme => ({
             cursor: 'pointer'
         }
     },
+    'all-likes__no-likes':{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: '1rem'
+    },
     '@media (min-width: 600px)': {
         'all-likes': {
             minWidth: '400px'
@@ -105,7 +110,7 @@ const Likes = (props) => {
                                 fontWeight: 'bold',
                                 color: 'inherit'
                             }} key={index} to={'/profile/' + item.owner}>{item.owner}</Link>)}
-                            {!likes.length && <div>Лайков пока что нет</div>}
+                            {!likes.length && <div className={classes['all-likes__no-likes']}>Лайков пока что нет</div>}
                         </div>
                     </div>
                 </Fade>

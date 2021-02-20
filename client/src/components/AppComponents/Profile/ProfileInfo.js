@@ -7,7 +7,6 @@ import {getLoading, getRecommended} from "../../../store/subscribers/selectors";
 
 const useStyles = makeStyles(theme => ({
     'profile-info': {
-        paddingLeft: '1rem',
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center'
@@ -16,21 +15,23 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        "& span:last-of-type": {
+            marginTop: '1rem'
+        }
     },
-    '@media (min-width: 600px)':{
+    '@media (min-width: 600px)': {
         'profile-info': {
             paddingLeft: '10rem',
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center'
+            flexDirection: 'column',
         },
         'profile-loading': {
-            display: 'flex',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'flex-start'
-        },
+            flexDirection: 'row',
+            "& span:last-of-type": {
+                marginTop: 0
+            }
+        }
     }
 }))
 
@@ -51,14 +52,14 @@ const ProfileInfo = (props) => {
     const userProfType = recommended.find(item => item.login === user.login) ? 'recommended' : 'subscription';
 
 
-
     return (
         <div className={classes['profile-info']}>
-            {!isLoading && <ProfileRef type={isOwn ? '' : userProfType} isLoading={isLoadingSubs} login={user.login} avatar={user.avatar || ''} isPageComp isOwn={isOwn}/>}
+            {!isLoading && <ProfileRef type={isOwn ? '' : userProfType} isLoading={isLoadingSubs} login={user.login}
+                                       avatar={user.avatar || ''} isPageComp isOwn={isOwn}/>}
             {isLoading &&
             <div className={classes['profile-loading']}>
                 <Skeleton animation={'wave'} variant="circle" height={'5rem'} width={'5rem'}/>
-                <Skeleton animation={'wave'} variant="text" height={'4vh'} width={'30%'} style={{marginLeft: '2rem'}}/>
+                <Skeleton animation={'wave'} variant="text" height={'4vh'} width={'80%'}/>
             </div>}
         </div>
     );

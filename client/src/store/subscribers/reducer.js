@@ -8,8 +8,8 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-    switch (action.type){
-        case subscribesActionTypes.TOGGLE_SUBS:{
+    switch (action.type) {
+        case subscribesActionTypes.TOGGLE_SUBS: {
 
             const {login, type} = action.payload;
 
@@ -32,8 +32,8 @@ const reducer = (state = initialState, action) => {
         case subscribesActionTypes.TOGGLE_LOADING: {
             return {...state, isLoading: !state.isLoading}
         }
+        default: return state;
     }
-    return state
 }
 
 export default reducer;

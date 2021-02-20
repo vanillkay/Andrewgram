@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import {useDispatch} from "react-redux";
 import {addUserPost} from "../../../store/posts/actions";
+import {Skeleton} from "@material-ui/lab";
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -62,7 +63,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const NewPost = () => {
+const NewPost = (props) => {
+
+    const {isLoading} = props;
     const [isNewPost, setIsNewPost] = useState(false);
 
     const [newPostInfo, setNewPostInfo] = useState('');
@@ -88,7 +91,7 @@ const NewPost = () => {
     }
 
     const download = async () => {
-        try{
+        try {
             if (!fileInput.current.files[0]) {
                 setIsError(true);
                 return
@@ -106,13 +109,13 @@ const NewPost = () => {
 
             const data = await res.json();
 
-            if (data.post){
+            if (data.post) {
                 dispatch(addUserPost(data.post));
                 setIsNewPost(false);
                 setNewPostInfo('');
             }
 
-        }catch (e) {
+        } catch (e) {
 
         }
 
@@ -120,44 +123,44 @@ const NewPost = () => {
 
     return (
         <div style={{textAlign: 'center', marginTop: '1rem'}}>
-            <Button onClick={handleOpen}>Создать пост</Button>
-            <Modal
-                disableAutoFocus
-                disableEnforceFocus
-                className={classes.modal}
-                open={isNewPost}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}>
-                <div className={classes['new-post']}>
-                    <CloseIcon onClick={handleClose}
-                               className={classes['new-post__close-btn']}/>
-                    <div className={classes['new-post__title']}>Создание нового поста</div>
-                    <div className={classes['new-post__input-title']}>Фото поста</div>
-                    <Input
-                        accept="image/*"
-                        id="contained-button-file"
-                        multiple
-                        className={classes['new-post__input-file']}
-                        type="file"
-                        name={'avatar'}
-                        inputRef={fileInput}
+            {isLoading ?  <Skeleton width={'20%'} style={{margin: '0 auto'}}/> : <><Button onClick={handleOpen}>Создать пост</Button>
+                <Modal
+                    disableAutoFocus
+                    disableEnforceFocus
+                    className={classes.modal}
+                    open={isNewPost}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}>
+                    <div className={classes['new-post']}>
+                        <CloseIcon onClick={handleClose}
+                                   className={classes['new-post__close-btn']}/>
+                        <div className={classes['new-post__title']}>Создание нового поста</div>
+                        <div className={classes['new-post__input-title']}>Фото поста</div>
+                        <Input
+                            accept="image/*"
+                            id="contained-button-file"
+                            multiple
+                            className={classes['new-post__input-file']}
+                            type="file"
+                            name={'avatar'}
+                            inputRef={fileInput}
 
-                    />
-                    <div className={classes['new-post__input-title']}>Информация о посте</div>
-                    <TextField
-                        className={classes['new-post__info']}
-                        id="standard-textarea"
-                        placeholder="Информация"
-                        multiline
-                        onChange={handleInput}
-                        value={newPostInfo}
-                    />
-                    {isError && <div className={classes['new-post__error']}>Сначала загрузите фото</div>}
-                    <Button className={classes['new-post__load-btn']} variant={'contained'} color={'primary'}
-                            onClick={download}>загрузить</Button>
-                </div>
-            </Modal>
+                        />
+                        <div className={classes['new-post__input-title']}>Информация о посте</div>
+                        <TextField
+                            className={classes['new-post__info']}
+                            id="standard-textarea"
+                            placeholder="Информация"
+                            multiline
+                            onChange={handleInput}
+                            value={newPostInfo}
+                        />
+                        {isError && <div className={classes['new-post__error']}>Сначала загрузите фото</div>}
+                        <Button className={classes['new-post__load-btn']} variant={'contained'} color={'primary'}
+                                onClick={download}>загрузить</Button>
+                    </div>
+                </Modal></>}
         </div>
     );
 };

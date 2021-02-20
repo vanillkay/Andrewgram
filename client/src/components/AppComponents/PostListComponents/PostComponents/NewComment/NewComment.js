@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewComment = React.forwardRef((props, forwardRef) => {
 
-    const {isLoading, loadComment, avatar} = props;
+    const {loadComment, avatar} = props;
 
     const [comment, setComment] = useState('');
 
@@ -79,7 +79,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
         loadComment(comment);
     }
 
-    const isPostLoading = useSelector(getPostCommentLoading);
+    const isComLoading = useSelector(getPostCommentLoading);
 
     const classes = useStyles();
     return (
@@ -95,7 +95,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                 <Grid className={classes['new-comment-input']} item>
                     <FormControl fullWidth variant="outlined">
                         <Input
-                            disabled={isLoading}
+                            disabled={isComLoading}
                             variant={'outlined'}
                             value={comment}
                             onChange={handleCommentInput}
@@ -105,7 +105,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                             placeholder=""
                             endAdornment={
                                 <InputAdornment position="end">
-                                    <Button disabled={isPostLoading} onClick={addComment}
+                                    <Button disabled={isComLoading} onClick={addComment}
                                             className={classes['comment-btn']}
                                             disableRipple>Опубликовать</Button>
                                 </InputAdornment>
@@ -117,7 +117,7 @@ const NewComment = React.forwardRef((props, forwardRef) => {
                 <Grid item>
                 </Grid>
             </Grid>
-            {isLoading && <div className={classes['new-comment-loader']}><CircularProgress/></div>}
+            {isComLoading && <div className={classes['new-comment-loader']}><CircularProgress/></div>}
         </div>
     );
 });

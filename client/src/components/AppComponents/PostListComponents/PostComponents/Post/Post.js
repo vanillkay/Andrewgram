@@ -18,9 +18,12 @@ import {getUserInfo} from "../../../../../store/user/selectors";
 import {Link} from "react-router-dom";
 import {toggleLoadingLike, toggleLoadingPost, writeNewComment} from "../../../../../store/posts/actions";
 import {useHttp} from "../../../../../hooks/http.hook";
+import moment from 'moment'
+import 'moment/locale/ru'
+moment.locale('ru')
 
 
-const useStyles = makeStyles((theme, props) => ({
+const useStyles = makeStyles(() => ({
     post: {
         width: '100%',
         marginBottom: props => props.isModal === true ? '' : '2rem',
@@ -36,6 +39,7 @@ const useStyles = makeStyles((theme, props) => ({
         }
     },
     media: {
+        minHeight: '60vh',
         maxHeight: '60vh',
         overflow: 'hidden',
         display: 'flex',
@@ -57,7 +61,6 @@ const useStyles = makeStyles((theme, props) => ({
     },
     'post-line': {
         height: '3px',
-        // width: '50%',
         margin: '1rem 0 1rem 1rem',
         backgroundColor: 'rgb(219, 219, 219)'
     }
@@ -68,20 +71,18 @@ const Post = (props) => {
 
     const {
         setModalInfo,
-        handleClose,
-        info,
+        info = {},
         isUserPost = false,
         loadingPost = false,
     } = props;
 
-    const {isLiked, id, imgSrc, likes, text, comments, ownerLogin, avatar = ''} = info;
+    const {isLiked, created, id, imgSrc, likes, text, comments, ownerLogin, avatar = ''} = info;
 
 
     const [isComment, setIsComment] = useState(false);
 
     const [animationSide, setAnimationSide] = useState('right');
 
-    const [isLoading, setIsLoading] = useState(false);
 
     const classes = useStyles({isModal: !!setModalInfo});
 
@@ -103,10 +104,6 @@ const Post = (props) => {
     }
 
 
-    const toggleComment = () => {
-        setIsComment(prevState => !prevState);
-    }
-
     const loadComment = (comment) => {
         dispatch(toggleLoadingPost())
         request('/post/comment', 'post', {id, owner: user.login, comment})
@@ -119,8 +116,11 @@ const Post = (props) => {
                 }, 500)
             }).finally(() => dispatch(toggleLoadingPost()))
 
-    }
+    };
 
+
+
+    const date = moment.parseZone(created).calendar();
 
     const toggleLikePost = e => {
         const targetData = e.target.dataset;
@@ -159,7 +159,7 @@ const Post = (props) => {
                         {ownerLogin}
                     </Link>
                 }
-                // subheader={loadingPost ? <Skeleton animation="wave" height={10} width="40%"/> : '5 hours ago'}
+                subheader={loadingPost ? <Skeleton animation="wave" height={10} width="40%"/> : date}
             />
             {loadingPost ? (
                 <Skeleton animation="wave" variant="rect" className={classes.media}/>
@@ -167,7 +167,6 @@ const Post = (props) => {
                 <div className={classes.media}>
                     <CardMedia
                         component={"img"}
-                        title="Ted talk"
                         src={'/' + imgSrc}
                         data-type={'post'}
                         data-info={id}
@@ -183,8 +182,8 @@ const Post = (props) => {
                     </>
                 ) : (
                     <>
-                        <PostIcons isLoading={isLoading} isComment={isComment} isLiked={isLiked} toggleLike={toggleLike}
-                                   toggleComment={toggleComment}/>
+                        <PostIcons isComment={isComment} isLiked={isLiked} toggleLike={toggleLike}
+                                   toggleComment={() => setIsComment(prevState => !prevState)}/>
                         <Likes likes={likes}/>
                         {text && text.length !== 0 && <div className={classes['post-info']}><Link to={{
                             pathname: '/profile/' + ownerLogin,
@@ -198,7 +197,7 @@ const Post = (props) => {
                         <Slide in={isComment} direction={animationSide} mountOnEnter
                                unmountOnExit>
                             <NewComment avatar={user.avatar} login={ownerLogin} loadComment={loadComment}
-                                        isLoading={isLoading}/>
+                            />
                         </Slide>
                     </>
                 )}

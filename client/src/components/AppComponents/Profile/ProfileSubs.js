@@ -114,11 +114,6 @@ const ProfileSubs = (props) => {
                 className={classes.modal}
                 open={isModal}
                 onClose={() => setIsModal(false)}
-                onClick={(event) => {
-                    if (event.target.tagName === 'A' || event.target.tagName === 'DIV') {
-                        setIsModal(false)
-                    }
-                }}
                 closeAfterTransition
                 disableScrollLock={true}
                 BackdropComponent={Backdrop}>
