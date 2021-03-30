@@ -1,3 +1,2 @@
-Разрабатывал проект Андрей.
-В дев режиме запускается коммандой – npm run dev.
-Проект на хостинге по ссылке -  https://andrewgram.herokuapp.com/
+# Andrewgram
+https://andrewgram.herokuapp.com/
