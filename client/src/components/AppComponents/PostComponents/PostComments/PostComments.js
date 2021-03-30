@@ -52,7 +52,7 @@ const PostComments = (props) => {
                             </p>
                             <Collapse mountOnEnter unmountOnExit in={isAllComments}>
                                 {
-                                    comments.map((item) =>
+                                    comments.slice(1).map(item =>
                                         <p key={item._id} className={classes.comment}>
                                             <Link to={'/profile/' + item.owner}>{item.owner}</Link>
                                             <span>{item.text}</span>
@@ -66,15 +66,14 @@ const PostComments = (props) => {
                                 onClick={() => setIsAllComments(prevState => !prevState)}>
                                 {isAllComments ? 'Скрыть' : `Показать больше (${comments.length - 1})`}
                             </Button>
-
                         </>
                     ) :
-
-                    (comments.map(item =>
-                        <p key={item.owner} className={classes.comment}>
-                            <Link to={'/profile/' + item.owner}>{item.owner}</Link>
-                            <span>{item.text}</span>
-                        </p>))
+                    comments.length ? (<p className={classes.comment}>
+                        <Link to={'/profile/' + comments[0].owner}>{comments[0].owner}</Link>
+                        <span>{comments[0].text}</span>
+                    </p>) : (<p className={classes.comment}>
+                        <span>Комментариев нету</span>
+                    </p>)
             }
         </div>
     );

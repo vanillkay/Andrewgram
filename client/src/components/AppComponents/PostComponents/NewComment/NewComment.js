@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Avatar, Button, CircularProgress, FormControl, Grid, Input, InputAdornment} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
-import {getPostCommentLoading} from "../../../../../store/posts/selectors";
+import {getPostCommentLoading} from "../../../../store/posts/selectors";
 
 const useStyles = makeStyles(theme => ({
     'new-comment': {

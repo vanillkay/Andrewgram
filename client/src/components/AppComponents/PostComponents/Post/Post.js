@@ -9,15 +9,15 @@ import {
     makeStyles, Slide,
 } from "@material-ui/core";
 import PostComments from "../PostComments/PostComments";
-import * as postsActions from "../../../../../store/posts/actions";
+import * as postsActions from "../../../../store/posts/actions";
 import {useDispatch, useSelector} from "react-redux";
 import Likes from "../Likes/Likes";
 import PostIcons from "../PostIcons/PostIcons";
 import NewComment from "../NewComment/NewComment";
-import {getUserInfo} from "../../../../../store/user/selectors";
+import {getUserInfo} from "../../../../store/user/selectors";
 import {Link} from "react-router-dom";
-import {toggleLoadingLike, toggleLoadingPost, writeNewComment} from "../../../../../store/posts/actions";
-import {useHttp} from "../../../../../hooks/http.hook";
+import {toggleLoadingLike, toggleLoadingPost, writeNewComment} from "../../../../store/posts/actions";
+import {useHttp} from "../../../../hooks/http.hook";
 import moment from 'moment'
 import 'moment/locale/ru'
 moment.locale('ru')

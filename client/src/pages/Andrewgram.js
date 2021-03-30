@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import PostsList from "../components/AppComponents/PostListComponents/PostsList/PostsList";
+import PostsList from "../components/AppComponents/PostsList/PostsList";
 import {makeStyles} from "@material-ui/core/styles";
 import SideProfileInfo from "../components/AppComponents/SideProfileInfoComponents/SideProfileInfo/SideProfileInfo";
 import {useDispatch, useSelector} from "react-redux";

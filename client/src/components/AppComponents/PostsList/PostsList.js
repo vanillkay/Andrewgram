@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Post from "../PostComponents/Post/Post";
 import {useDispatch, useSelector} from "react-redux";
-import * as postsActions from '../../../../store/posts/actions';
-import {getUserInfo} from "../../../../store/user/selectors";
-import {getPosts} from "../../../../store/posts/selectors";
-import {useHttp} from "../../../../hooks/http.hook";
-import {setAllPosts, toggleLoadingLike} from "../../../../store/posts/actions";
+import * as postsActions from '../../../store/posts/actions';
+import {getUserInfo} from "../../../store/user/selectors";
+import {getPosts} from "../../../store/posts/selectors";
+import {useHttp} from "../../../hooks/http.hook";
+import {setAllPosts, toggleLoadingLike} from "../../../store/posts/actions";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {CircularProgress} from "@material-ui/core";
 

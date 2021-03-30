@@ -6,7 +6,7 @@ import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import ChatBubbleOutlineOutlinedIcon from "@material-ui/icons/ChatBubbleOutlineOutlined";
 import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
-import {getPostCommentLoading, getPostLikeLoading} from "../../../../../store/posts/selectors";
+import {getPostCommentLoading, getPostLikeLoading} from "../../../../store/posts/selectors";
 
 
 const useStyles = makeStyles(theme => ({

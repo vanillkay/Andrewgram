@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import ProfilePost from "./ProfilePost";
 import {makeStyles} from "@material-ui/core/styles";
 import {Backdrop, Modal} from "@material-ui/core";
-import Post from "../PostListComponents/PostComponents/Post/Post";
+import Post from "../PostComponents/Post/Post";
 
 import {useSelector} from "react-redux";
 import {getUserPosts} from "../../../store/posts/selectors";
