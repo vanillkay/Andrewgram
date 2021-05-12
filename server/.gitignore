@@ -6,6 +6,8 @@
 .pnp.js
 /.idea
 
+/keys
+
 # testing
 /coverage
 
