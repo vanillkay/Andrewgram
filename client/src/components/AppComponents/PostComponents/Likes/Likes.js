@@ -4,7 +4,6 @@ import {Fade, Modal, Backdrop} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import {Link} from "react-router-dom";
 
-
 const useStyles = makeStyles(theme => ({
     likes: {
         margin: '0 0 0 1rem',
