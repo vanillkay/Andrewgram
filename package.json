@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "set-up": "npm i && npm i --prefix server && npm i --prefix client",
     "start": "npm start --prefix server",
     "build": "npm i --prefix client && npm run build --prefix client && npm i --prefix server && rm -rf server/public/* && cp -a client/build/. server/public/",
     "client-dev": "npm run start --prefix client",
     "server-dev": "npm run dev --prefix server",
-    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\""
+    "dev": "concurrently 'npm run server-dev' 'npm run client-dev'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^5.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.4"
   }
 }
