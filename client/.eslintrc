@@ -1,0 +1,71 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": "./tsconfig.json",
+        "ecmaFeatures": { "jsx": true }
+    },
+    "settings": {
+        "react": { "version": "detect" },
+        "import/resolver": {
+            "node": {
+                "paths": ["src"]
+            }
+        }
+    },
+    "env": {
+        "amd": true,
+        "node": true,
+        "browser": true,
+        "mocha": true,
+        "jest": true
+    },
+    "globals": {
+        "browser": true,
+        "$": true,
+        "$$": true,
+        "expect": true
+    },
+    "extends": [
+        "airbnb-typescript",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": ["@typescript-eslint", "import", "react"],
+    "rules": {
+        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+        "@typescript-eslint/naming-convention": "off",
+        "import/prefer-default-export": "off",
+        "linebreak-style": "off",
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": true,
+                "optionalDependencies": true,
+                "peerDependencies": false
+            }
+        ],
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            },
+            { "usePrettierrc": true }
+        ],
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "src/**/test.tsx",
+                "src/components/common/note-input/*.tsx",
+                "src/components/common/action-button/*.tsx"
+            ],
+            "rules": {
+                "react/jsx-props-no-spreading": "off"
+            }
+        }
+    ]
+}
