@@ -6,6 +6,7 @@ import {
   CardMedia,
   makeStyles,
   Slide,
+  Theme,
 } from '@material-ui/core';
 import 'moment/locale/ru';
 import moment from 'moment';
@@ -26,13 +27,14 @@ import { getUserInfo } from 'store/user/selectors';
 import * as postsActions from 'store/posts/actions';
 import { Likes } from 'components/post/likes';
 import { NewComment } from 'components/post/new-comment';
+import { PostInfoProps } from './types';
 
 moment.locale('ru');
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<Theme, { isModal: boolean }>(() => ({
   post: {
     width: '100%',
-    marginBottom: (props) => (props.isModal === true ? '' : '2rem'),
+    marginBottom: (props) => (props.isModal ? '' : '2rem'),
     border: '1px solid rgb(219, 219, 219)',
     borderRadius: '3px',
   },
@@ -72,14 +74,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Post = (props) => {
-  const {
-    setModalInfo,
-    info = {},
-    isUserPost = false,
-    loadingPost = false,
-  } = props;
-
+const Post = ({
+  setModalInfo,
+  info,
+  isUserPost = false,
+  loadingPost = false,
+}: PostInfoProps) => {
   const {
     isLiked,
     created,

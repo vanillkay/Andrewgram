@@ -1,47 +1,33 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Fade } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
-  entry__title: {
-    fontSize: '2.5rem',
-  },
-  entry__actions: {
-    marginTop: '50px',
-    textAlign: 'center',
-  },
-}));
+import { Appear } from './types';
+import { useStyles } from './styles';
+import { timeoutAppear } from './helpers';
 
-const Entry = () => {
+const Entry = (): JSX.Element => {
+  const [isAppear, setIsAppear] = useState<Appear>({
+    title: false,
+    actions: false,
+  });
+
   const history = useHistory();
   const classes = useStyles();
 
-  const [isAppear, setIsAppear] = useState({ title: false, actions: false });
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsAppear((prevState) => ({ ...prevState, title: true }));
-    }, 500);
-    setTimeout(() => {
-      setIsAppear((prevState) => ({ ...prevState, actions: true }));
-    }, 1000);
-  }, []);
-
   const startApp = () => {
-    setTimeout(() => {
-      setIsAppear((prevState) => ({ ...prevState, title: false }));
-    }, 0);
-    setTimeout(() => {
-      setIsAppear((prevState) => ({ ...prevState, actions: false }));
-    }, 0);
-    setTimeout(() => {
-      history.push('/auth');
-    }, 500);
+    timeoutAppear(setIsAppear, { title: false }, 0);
+    timeoutAppear(setIsAppear, { actions: false }, 0);
+    setTimeout(() => history.push('/auth'), 500);
   };
 
+  useEffect(() => {
+    timeoutAppear(setIsAppear, { title: true }, 500);
+    timeoutAppear(setIsAppear, { actions: true }, 1000);
+  }, []);
+
   return (
-    <div className={classes.entry__content}>
+    <div>
       <Fade in={isAppear.title} timeout={{ enter: 2000, exit: 500 }}>
         <div className={classes.entry__title}>
           Добро пожаловать в Andrewgram
@@ -58,4 +44,4 @@ const Entry = () => {
   );
 };
 
-export default Entry;
+export { Entry };
