@@ -69,7 +69,10 @@ const NewAvatar = (props) => {
     if (!file.type.match('image.*')) {
       setInputImg('');
       setImg('');
-      setError({ isError: true, text: 'Выбраный файл не есть изображением !' });
+      setError({
+        isError: true,
+        text: 'Выбранный файл не есть изображением !',
+      });
       return;
     }
     setError({ isError: false, text: '' });

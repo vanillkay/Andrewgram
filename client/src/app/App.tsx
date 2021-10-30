@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Theme from 'components/Theme/theme';
+import { Theme } from 'components/Theme';
 import AndrewgramRoutes from 'routes';
 
 import './App.css';

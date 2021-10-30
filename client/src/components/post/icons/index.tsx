@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
@@ -10,17 +9,15 @@ import {
   getPostCommentLoading,
   getPostLikeLoading,
 } from 'store/posts/selectors';
+import { useStyles } from './styles';
+import { PostIconsProps } from './types';
 
-const useStyles = makeStyles((theme) => ({
-  like: {},
-  'like-active': {
-    color: theme.colors.like,
-  },
-}));
-
-const PostIcons = (props) => {
-  const { isLiked, toggleLike, isComment, toggleComment } = props;
-
+const PostIcons = ({
+  isLiked,
+  isComment,
+  toggleLike,
+  toggleComment,
+}: PostIconsProps) => {
   const isLikeLoading = useSelector(getPostLikeLoading);
 
   const isComLoading = useSelector(getPostCommentLoading);
@@ -54,4 +51,4 @@ const PostIcons = (props) => {
   );
 };
 
-export default PostIcons;
+export { PostIcons };

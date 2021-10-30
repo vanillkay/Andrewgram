@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import smoothscroll from 'smoothscroll-polyfill';
 
@@ -12,33 +11,24 @@ import { getUserInfo } from 'store/user/selectors';
 import { setVisitedUserInfo } from 'store/user/actions';
 import ProfilePostsGrid from 'components/profile/posts';
 import { getRecommended, getSubscriptions } from 'store/subscribers/selectors';
+import { useStyles } from './styles';
+import { getVisitedUser, isOwnUserPage } from './helpers';
 
 smoothscroll.polyfill();
 
-const useStyles = makeStyles(() => ({
-  'profile-page': {
-    padding: '4rem 2rem',
-    margin: '0 auto',
-  },
-}));
-
 const ProfilePage = () => {
-  const classes = useStyles();
-
   const { request, loading } = useHttp();
-
-  const { login } = useParams();
-
+  const { login } = useParams<{ login: string }>();
   const dispatch = useDispatch();
-
   const user = useSelector(getUserInfo);
 
-  const visitedUser = [
-    ...useSelector(getRecommended),
-    ...useSelector(getSubscriptions),
-  ].filter((item) => item.login === login)[0];
+  const visitedUser = getVisitedUser(
+    useSelector(getRecommended),
+    useSelector(getSubscriptions),
+    login
+  );
 
-  const isOwn = login === user.login;
+  const isOwn = isOwnUserPage(login, user.login);
 
   useEffect(() => {
     window.scrollTo({
@@ -55,6 +45,8 @@ const ProfilePage = () => {
       })
       .catch(() => {});
   }, [login]);
+
+  const classes = useStyles();
 
   return (
     <div className={classes['profile-page']}>

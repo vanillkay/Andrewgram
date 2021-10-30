@@ -1,40 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Collapse } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
-  comments: {
-    marginLeft: '1rem',
-  },
-  'show-all-comment-btn': {
-    marginTop: '5px',
-    paddingLeft: 0,
-    '&:hover': {
-      backgroundColor: 'white',
-    },
-  },
-  comment: {
-    '& a': {
-      color: 'black',
-      fontWeight: 'bold',
-      marginRight: '0.5rem',
-      textDecoration: 'none',
-      transition: '.3s',
-      '&:hover': {
-        textDecoration: 'underline',
-      },
-    },
-    '&:last-of-type': {
-      marginBottom: '0',
-    },
-  },
-}));
+import { useStyles } from './styles';
+import { CommentsProps } from './types';
+import { mapComments } from './helpers';
 
-const PostComments = (props) => {
-  const { comments } = props;
-
-  const [isAllComments, setIsAllComments] = useState(false);
+const PostComments = ({ comments }: CommentsProps) => {
+  const [isAllComments, setIsAllComments] = useState<boolean>(false);
 
   const classes = useStyles();
 
@@ -49,12 +22,7 @@ const PostComments = (props) => {
             <span>{comments[0].text}</span>
           </p>
           <Collapse mountOnEnter unmountOnExit in={isAllComments}>
-            {comments.slice(1).map((item) => (
-              <p key={item._id} className={classes.comment}>
-                <Link to={'/profile/' + item.owner}>{item.owner}</Link>
-                <span>{item.text}</span>
-              </p>
-            ))}
+            {mapComments(comments, classes.comment)}
           </Collapse>
           <Button
             disableRipple

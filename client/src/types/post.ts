@@ -9,6 +9,7 @@ export interface Post {
 }
 
 export interface PostComment {
+  readonly _id: string;
   readonly owner: string;
   readonly text: string;
 }

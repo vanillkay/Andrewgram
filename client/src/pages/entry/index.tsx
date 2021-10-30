@@ -1,17 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { Entry } from 'components/common/entry';
 
-import Entry from 'components/common/entry';
-
-const useStyles = makeStyles(() => ({
-  'entry-page': {
-    width: '100%',
-    height: '90vh',
-    boxSizing: 'border-box',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}));
+import { useStyles } from './styles';
 
 const EntryPage = () => {
   const classes = useStyles();
