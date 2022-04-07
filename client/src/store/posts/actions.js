@@ -1,4 +1,4 @@
-import * as postsActionTypes from './types';
+import * as postsActionTypes from './actionTypes';
 
 export const toggleLike = (id, likeOwner, isUserPost) => ({
   type: postsActionTypes.TOGGLE_LIKE_POST,
