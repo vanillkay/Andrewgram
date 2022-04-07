@@ -1,51 +1,53 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FC } from 'react';
+import isEmpty from 'lodash/isEmpty';
 import { Button, Collapse } from '@material-ui/core';
 
 import { useStyles } from './styles';
 import { CommentsProps } from './types';
 import { mapComments } from './helpers';
+import { useToggle } from 'hooks/useToggle';
+import { PostComment } from './comment';
 
-const PostComments = ({ comments }: CommentsProps) => {
-  const [isAllComments, setIsAllComments] = useState<boolean>(false);
+const PostComments: FC<CommentsProps> = ({ comments }) => {
+  const [isAllComments, toggleAllComments] = useToggle();
 
   const classes = useStyles();
 
+  if (isEmpty(comments)) {
+    return (
+      <div className={classes.comments}>
+        <p className={classes.comment}>
+          <span>Комментариев нету</span>
+        </p>
+      </div>
+    );
+  }
+
+  const firstComment = comments[0];
+
+  const allCommentsBtnText = isAllComments
+    ? 'Скрыть'
+    : `Показать больше (${comments.length - 1})`;
+
   return (
     <div className={classes.comments}>
-      {comments.length > 1 ? (
+      <PostComment comment={firstComment} className={classes.comment} />
+      {comments.length > 1 && (
         <>
-          <p className={classes.comment}>
-            <Link to={'/profile/' + comments[0].owner}>
-              {comments[0].owner}
-            </Link>
-            <span>{comments[0].text}</span>
-          </p>
           <Collapse mountOnEnter unmountOnExit in={isAllComments}>
             {mapComments(comments, classes.comment)}
           </Collapse>
           <Button
             disableRipple
+            onClick={toggleAllComments}
             className={classes['show-all-comment-btn']}
-            onClick={() => setIsAllComments((prevState) => !prevState)}
           >
-            {isAllComments
-              ? 'Скрыть'
-              : `Показать больше (${comments.length - 1})`}
+            {allCommentsBtnText}
           </Button>
         </>
-      ) : comments.length ? (
-        <p className={classes.comment}>
-          <Link to={'/profile/' + comments[0].owner}>{comments[0].owner}</Link>
-          <span>{comments[0].text}</span>
-        </p>
-      ) : (
-        <p className={classes.comment}>
-          <span>Комментариев нету</span>
-        </p>
       )}
     </div>
   );
 };
 
-export default PostComments;
+export { PostComments };

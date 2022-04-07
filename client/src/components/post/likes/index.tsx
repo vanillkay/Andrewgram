@@ -1,23 +1,21 @@
-import React from 'react';
+import React, { FC } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import { Fade, Modal, Backdrop } from '@material-ui/core';
+
+import { useToggle } from 'hooks/useToggle';
 
 import { useStyles } from './styles';
 import { LikesProps } from './types';
 import { mapLikes } from './helpers';
 
-const Likes = ({ likes }: LikesProps) => {
+const Likes: FC<LikesProps> = ({ likes }) => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => setOpen(true);
-
-  const handleClose = () => setOpen(false);
+  const [open, toggleOpen] = useToggle();
 
   return (
     <>
-      <p onClick={handleOpen} className={classes.likes}>
+      <p onClick={toggleOpen} className={classes.likes}>
         {likes.length} отметок "Нравится"
       </p>
       <Modal
@@ -25,7 +23,7 @@ const Likes = ({ likes }: LikesProps) => {
         disableAutoFocus
         disableEnforceFocus
         closeAfterTransition
-        onClose={handleClose}
+        onClose={toggleOpen}
         className={classes.modal}
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -37,7 +35,7 @@ const Likes = ({ likes }: LikesProps) => {
             <div className={classes['all-likes__title']}>
               Отметки "Нравится"
               <CloseIcon
-                onClick={handleClose}
+                onClick={toggleOpen}
                 className={classes['all-likes__close-btn']}
               />
             </div>

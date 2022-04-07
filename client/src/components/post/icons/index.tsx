@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -6,28 +7,29 @@ import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutline
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 
 import {
-  getPostCommentLoading,
   getPostLikeLoading,
+  getPostCommentLoading,
 } from 'store/posts/selectors';
 import { useStyles } from './styles';
 import { PostIconsProps } from './types';
 
-const PostIcons = ({
+const PostIcons: FC<PostIconsProps> = ({
   isLiked,
   isComment,
   toggleLike,
   toggleComment,
-}: PostIconsProps) => {
+}) => {
   const isLikeLoading = useSelector(getPostLikeLoading);
 
   const isComLoading = useSelector(getPostCommentLoading);
 
   const classes = useStyles();
+
   return (
     <>
       <IconButton
-        disabled={isLikeLoading}
         onClick={toggleLike}
+        disabled={isLikeLoading}
         aria-label="add to favorites"
       >
         {isLiked ? (

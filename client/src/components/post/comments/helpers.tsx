@@ -1,10 +1,13 @@
-import { PostComment } from 'types/post';
-import { Link } from 'react-router-dom';
+import { PostComment as PostCommentType } from 'types/post';
 
-export const mapComments = (comments: Array<PostComment>, className: string) =>
-  comments.slice(1).map((item) => (
-    <p key={item._id} className={className}>
-      <Link to={'/profile/' + item.owner}>{item.owner}</Link>
-      <span>{item.text}</span>
-    </p>
-  ));
+import { PostComment } from './comment';
+
+export const mapComments = (
+  comments: Array<PostCommentType>,
+  className: string
+): JSX.Element[] =>
+  comments
+    .slice(1)
+    .map((comment) => (
+      <PostComment key={comment._id} comment={comment} className={className} />
+    ));

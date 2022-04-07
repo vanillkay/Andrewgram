@@ -1,53 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { useHttp } from 'hooks/http.hook';
 
-const useStyles = makeStyles((theme) => ({
-  inputs: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    width: '60%',
-    marginTop: '20px',
-  },
-  'form-actions': {
-    width: '100%',
-    marginTop: '2rem',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  'form-title': {
-    textAlign: 'center',
-    fontSize: '1.5rem',
-  },
-  form: {
-    '& .MuiFormHelperText-root	': {
-      fontSize: '1rem',
-    },
-  },
-  'register-error': {
-    color: theme.colors.error,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  'register-success': {
-    color: theme.colors.success,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: '1.2rem',
-  },
-}));
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-};
+import { useStyles } from './styles';
+import { validateEmail } from './helpers';
 
 const RegisterForm = () => {
   const [errors, setErrors] = useState({

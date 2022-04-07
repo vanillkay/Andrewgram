@@ -1,18 +1,13 @@
-import { useState } from 'react';
-import { Button } from '@material-ui/core';
+import { FC, useState } from 'react';
+import { Button, Theme } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useHttp } from 'hooks/http.hook';
+import { validateEmail } from '../register/helpers';
 
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-};
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   'forgot-form': {
     minWidth: '300px',
     maxWidth: '500px',
@@ -42,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ForgotPasswordForm = (props) => {
+const ForgotPasswordForm: FC<{}> = (props) => {
   const { setIsAppear } = props;
 
   const [email, setEmail] = useState('');

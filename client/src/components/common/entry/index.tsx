@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { FC, useEffect, useState } from 'react';
 import { Button, Fade } from '@material-ui/core';
 
 import { Appear } from './types';
 import { useStyles } from './styles';
 import { timeoutAppear } from './helpers';
 
-const Entry = (): JSX.Element => {
+const Entry: FC = () => {
   const [isAppear, setIsAppear] = useState<Appear>({
     title: false,
     actions: false,
@@ -16,8 +16,7 @@ const Entry = (): JSX.Element => {
   const classes = useStyles();
 
   const startApp = () => {
-    timeoutAppear(setIsAppear, { title: false }, 0);
-    timeoutAppear(setIsAppear, { actions: false }, 0);
+    timeoutAppear(setIsAppear, { title: false, actions: false }, 0);
     setTimeout(() => history.push('/auth'), 500);
   };
 

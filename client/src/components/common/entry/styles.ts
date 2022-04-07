@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles({
   entry__title: {
     fontSize: '2.5rem',
   },
@@ -8,4 +8,4 @@ export const useStyles = makeStyles(() => ({
     marginTop: '50px',
     textAlign: 'center',
   },
-}));
+});

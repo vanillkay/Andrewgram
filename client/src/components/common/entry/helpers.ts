@@ -1,7 +1,9 @@
+import { Dispatch, SetStateAction } from 'react';
+
 import { Appear } from './types';
 
 export const timeoutAppear = (
-  setIsAppear: (callback: (prevState: Appear) => Appear) => void,
+  setIsAppear: Dispatch<SetStateAction<Appear>>,
   changes: { title?: boolean; actions?: boolean },
   changeTime: number
 ): void => {

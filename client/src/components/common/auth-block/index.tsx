@@ -1,16 +1,12 @@
+import { FC, useState } from 'react';
 import { Slide } from '@material-ui/core';
-import { useEffect, useState } from 'react';
 
 import { useStyles } from './styles';
 import { FullWidthTabs } from './tabs';
 
-const AuthBlock = (): JSX.Element => {
+const AuthBlock: FC = () => {
   const classes = useStyles();
-  const [isAppear, setIsAppear] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsAppear(true);
-  }, []);
+  const [isAppear, setIsAppear] = useState<boolean>(true);
 
   return (
     <Slide in={isAppear} timeout={{ enter: 1000, exit: 500 }}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -10,9 +10,7 @@ import { getUserInfo } from 'store/user/selectors';
 import * as postsActions from 'store/posts/actions';
 import { setAllPosts, toggleLoadingLike } from 'store/posts/actions';
 
-const PostsList = (props) => {
-  const { isLoading } = props;
-
+const PostsList: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   const serverPosts = useSelector(getPosts);
 
   const dispatch = useDispatch();
@@ -62,7 +60,7 @@ const PostsList = (props) => {
   return (
     <>
       {isLoading ? (
-        loading.map((item, index) => <Index key={index} loadingPost={true} />)
+        loading.map((item, index) => <Post key={index} loadingPost={true} />)
       ) : (
         <InfiniteScroll
           next={loadPosts}

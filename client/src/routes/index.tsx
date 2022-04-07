@@ -1,4 +1,6 @@
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
+import { RouteProps } from 'react-router-dom';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { MainPage } from 'pages/main';
@@ -9,7 +11,7 @@ import { AuthPage } from 'pages/auth';
 import { ResetPasswordPage } from 'pages/password/reset';
 import { ForgotPasswordPage } from 'pages/password/forgot';
 
-const ProtectedRoute = (props) => {
+const ProtectedRoute: FC<RouteProps> = (props) => {
   const { exact, path, component } = props;
 
   const isAuthUser = useSelector(isAuth);

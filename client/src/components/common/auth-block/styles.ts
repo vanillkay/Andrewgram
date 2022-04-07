@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles({
   'auth-page': {
     margin: '0 auto',
     width: '100%',
@@ -16,4 +16,4 @@ export const useStyles = makeStyles(() => ({
     borderRadius: '20px',
     paddingTop: '3rem',
   },
-}));
+});

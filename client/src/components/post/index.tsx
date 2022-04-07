@@ -9,7 +9,7 @@ import {
 import 'moment/locale/ru';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Skeleton } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,17 +26,17 @@ import { NewComment } from 'components/post/new-comment';
 
 import { PostIcons } from './icons';
 import { useStyles } from './styles';
-import PostComments from './comments';
+import { PostComments } from './comments';
 import { Direction, PostInfoProps } from './types';
 
 moment.locale('ru');
 
-const Post = ({
+const Post: FC<PostInfoProps> = ({
   setModalInfo,
   info,
   isUserPost = false,
-  loadingPost = false,
-}: PostInfoProps) => {
+  isLoadingPost = false,
+}) => {
   const {
     isLiked,
     created,
@@ -113,7 +113,7 @@ const Post = ({
     <Card className={classes.post}>
       <CardHeader
         avatar={
-          loadingPost ? (
+          isLoadingPost ? (
             <Skeleton
               animation="wave"
               variant="circle"
@@ -125,7 +125,7 @@ const Post = ({
           )
         }
         title={
-          loadingPost ? (
+          isLoadingPost ? (
             <Skeleton
               animation="wave"
               height={10}
@@ -142,14 +142,14 @@ const Post = ({
           )
         }
         subheader={
-          loadingPost ? (
+          isLoadingPost ? (
             <Skeleton animation="wave" height={10} width="40%" />
           ) : (
             date
           )
         }
       />
-      {loadingPost ? (
+      {isLoadingPost ? (
         <Skeleton animation="wave" variant="rect" className={classes.media} />
       ) : (
         <div className={classes.media}>
