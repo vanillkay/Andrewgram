@@ -6,3 +6,4 @@ export const SET_USER_POSTS = 'SET_USER_POSTS';
 export const ADD_USER_POST = 'ADD_USER_POST';
 export const TOGGLE_ALL_POST_LOADING = 'TOGGLE_ALL_POST_LOADING';
 export const SET_ALL_POSTS = 'SET_ALL_POSTS';
+export const LOAD_POSTS = 'LOAD_POSTS';

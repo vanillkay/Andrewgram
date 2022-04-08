@@ -1,8 +1,10 @@
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import { configureStore } from '@reduxjs/toolkit';
 
 import { RootState } from 'store/root/types';
 import { rootReducer } from 'store/root/reducer';
+
+import { rootWatcher } from './root/saga';
 
 // const devtools =
 //   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -15,10 +17,14 @@ import { rootReducer } from 'store/root/reducer';
 //
 // export default store;
 
+const sagaMiddleware = createSagaMiddleware();
+
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk],
+  middleware: [sagaMiddleware],
 });
+
+sagaMiddleware.run(rootWatcher);
 
 export type AppDispatch = typeof store.dispatch;
 export type StoreState = RootState;

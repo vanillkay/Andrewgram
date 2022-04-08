@@ -13,9 +13,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   'form-actions': {
     width: '100%',
-    marginTop: '2rem',
+    maxWidth: '200px',
+    margin: '2rem auto 0',
     display: 'flex',
     justifyContent: 'center',
+    textAlign: 'center',
+    flexDirection: 'column',
   },
   'form-title': {
     textAlign: 'center',
@@ -26,17 +29,10 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '1rem',
     },
   },
-  'register-error': {
+  'login-error': {
     // @ts-ignore
     color: theme.colors.error,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  'register-success': {
-    // @ts-ignore
-    color: theme.colors.success,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: '1.2rem',
   },
 }));

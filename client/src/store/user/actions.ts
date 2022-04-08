@@ -1,4 +1,14 @@
-import * as userActionTypes from './types';
+import * as userActionTypes from './actionTypes';
+import { createAction } from '@reduxjs/toolkit';
+import { LoginFormValues } from '../../components/common/forms/login/types';
+
+export const resetPasswordAction = createAction<string>(
+  userActionTypes.RESET_USER_PASSWORD
+);
+
+export const loginUserAction = createAction<LoginFormValues>(
+  userActionTypes.LOGIN_USER
+);
 
 export const authUser = (userInfo) => ({
   type: userActionTypes.AUTH_USER,

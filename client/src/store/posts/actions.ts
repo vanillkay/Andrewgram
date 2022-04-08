@@ -1,9 +1,11 @@
 import * as postsActionTypes from './actionTypes';
+import { createAction } from '@reduxjs/toolkit';
 
-export const toggleLike = (id, likeOwner, isUserPost) => ({
-  type: postsActionTypes.TOGGLE_LIKE_POST,
-  payload: { id, likeOwner, isUserPost },
-});
+export const toggleLikePostAction = createAction<number>(
+  postsActionTypes.TOGGLE_LIKE_POST
+);
+
+export const loadPostsAction = createAction(postsActionTypes.LOAD_POSTS);
 
 export const writeNewComment = (isUserPost, postId, comment) => ({
   type: postsActionTypes.WRITE_NEW_COMMENT,

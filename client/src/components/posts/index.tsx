@@ -4,46 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { Post } from 'components/post';
-import { useHttp } from 'hooks/http.hook';
 import { getPosts } from 'store/posts/selectors';
-import { getUserInfo } from 'store/user/selectors';
-import * as postsActions from 'store/posts/actions';
-import { setAllPosts, toggleLoadingLike } from 'store/posts/actions';
+import { loadPostsAction, toggleLikePostAction } from 'store/posts/actions';
 
 const PostsList: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   const serverPosts = useSelector(getPosts);
 
   const dispatch = useDispatch();
 
-  const user = useSelector(getUserInfo);
-
   const [isAllPosts, setIsAllPosts] = useState(false);
-
-  const { request } = useHttp();
 
   const toggleLikePost = (e) => {
     const targetData = e.target.dataset;
     if (targetData.type === 'post' && targetData.info) {
-      dispatch(toggleLoadingLike());
-      request('/post/like', 'post', {
-        id: targetData.info,
-        likerLogin: user.login,
-      })
-        .then(() => {
-          dispatch(postsActions.toggleLike(targetData.info, user.login));
-        })
-        .catch(() => {})
-        .finally(() => dispatch(toggleLoadingLike()));
+      dispatch(toggleLikePostAction(targetData.info));
     }
   };
 
   const loadPosts = async () => {
-    const res = await request('/posts/all', 'post', {
-      login: user.login,
-      length: serverPosts.length + 3,
-    });
-    dispatch(setAllPosts(res.posts, user.login));
-    if (res.isAllPosts) {
+    dispatch(loadPostsAction());
+    if (false) {
       setIsAllPosts(true);
     }
   };

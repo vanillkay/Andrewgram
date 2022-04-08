@@ -1,4 +1,7 @@
-export const getPosts = ({ posts }) => posts.posts;
+import { Post } from 'types/post';
+import { RootState } from '../root/types';
+
+export const getPosts = (store: RootState): Post[] => store.posts.posts;
 export const getAllPostsLoading = ({ posts }) => posts.isLoadingAllPosts;
 export const getUserPosts = ({ posts }) => posts.userPosts;
 export const getUserPostsLoaded = ({ posts }) => posts.isLoadedUserPosts;

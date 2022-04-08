@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core';
 
-export const useStyles = makeStyles<Theme, { isModal: boolean }>(() => ({
+export const useStyles = makeStyles<Theme, { isModal: boolean }>({
   post: {
     width: '100%',
     marginBottom: (props) => (props.isModal ? '' : '2rem'),
@@ -41,4 +41,4 @@ export const useStyles = makeStyles<Theme, { isModal: boolean }>(() => ({
     margin: '1rem 0 1rem 1rem',
     backgroundColor: 'rgb(219, 219, 219)',
   },
-}));
+});

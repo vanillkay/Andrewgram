@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import { Fade, Modal, Backdrop } from '@material-ui/core';
 
@@ -40,11 +40,12 @@ const Likes: FC<LikesProps> = ({ likes }) => {
               />
             </div>
             <div className={classes['all-likes__list']}>
-              {mapLikes(likes)}
-              {!likes.length && (
+              {!likes.length ? (
                 <div className={classes['all-likes__no-likes']}>
                   Лайков пока что нет
                 </div>
+              ) : (
+                mapLikes(likes)
               )}
             </div>
           </div>

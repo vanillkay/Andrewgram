@@ -1,92 +1,31 @@
-import { FC, useState } from 'react';
-import { Button, Theme } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import { Form, Formik, FormikHelpers } from 'formik';
+import { Dispatch, FC, SetStateAction } from 'react';
 
-import { useHttp } from 'hooks/http.hook';
-import { validateEmail } from '../register/helpers';
+import {
+  forgetPasswordInitialValues,
+  forgotPasswordValidationSchema,
+} from './config';
+import { useStyles } from './styles';
+import FormikInputField from '../../input-field';
+import { ForgotPasswordFormValues } from './types';
+import { resetPasswordAction } from '../../../../store/user/actions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  'forgot-form': {
-    minWidth: '300px',
-    maxWidth: '500px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  'forgot-form__title': {
-    marginBottom: '2rem',
-  },
-  'forgot-form__action': {
-    marginTop: '1.5rem',
-    minWidth: '200px',
-  },
-  'forgot-form__resp': {
-    marginTop: '1rem',
-    textAlign: 'center',
-    fontSize: '1.2rem',
-  },
-  'forgot-form__resp-success': {
-    color: theme.colors.success,
-  },
-  'forgot-form__resp-error': {
-    color: theme.colors.error,
-  },
-}));
-
-const ForgotPasswordForm: FC<{}> = (props) => {
-  const { setIsAppear } = props;
-
-  const [email, setEmail] = useState('');
-  const [inputError, setInputError] = useState(false);
-  const [inputErrorText, setInputErrorText] = useState('');
-  const [response, setResponse] = useState({
-    ready: false,
-    success: false,
-    errorText: '',
-  });
-  const { loading, request } = useHttp();
+const ForgotPasswordForm: FC<{
+  setIsAppear: Dispatch<SetStateAction<boolean>>;
+}> = ({ setIsAppear }) => {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  const handleInput = (e) => {
-    if (inputError) {
-      setInputErrorText('');
-      setInputError(false);
-    }
-    setEmail(e.target.value);
-  };
-
-  const handleForm = async (e) => {
-    try {
-      e.preventDefault();
-      if (!validateEmail(email)) {
-        setInputError(true);
-        setInputErrorText('Введите корректный email');
-        return;
-      } else {
-        if (inputError) {
-          setInputErrorText('');
-          setInputError(false);
-        }
-        const resp = await request('/auth/reset', 'post', { email });
-        if (resp.success) {
-          setEmail('');
-          setResponse({ ready: true, success: true, errorText: '' });
-        } else {
-          throw new Error('Что-то пошло не так, повторите попытку позже');
-        }
-      }
-    } catch ({ message }) {
-      setResponse({
-        ready: true,
-        success: false,
-        errorText: message || 'Что-то пошло не так, повторите попытку позже',
-      });
-    }
+  const handleForm = async (
+    values: ForgotPasswordFormValues,
+    helpers: FormikHelpers<ForgotPasswordFormValues>
+  ) => {
+    helpers.setSubmitting(true);
+    dispatch(resetPasswordAction(values.email));
   };
 
   const goAuth = () => {
@@ -97,51 +36,49 @@ const ForgotPasswordForm: FC<{}> = (props) => {
   };
 
   return (
-    <form className={classes['forgot-form']}>
-      <div className={classes['forgot-form__title']}>Введите ваш email</div>
-      <TextField
-        error={inputError}
-        id="filled-error-helper-text9"
-        label="Email"
-        onChange={handleInput}
-        helperText={inputErrorText}
-        variant="filled"
-        name={'email'}
-        value={email}
-      />
-      <div className={classes['forgot-form__resp']}>
-        {response.ready &&
-          (response.success ? (
-            <div className={classes['forgot-form__resp-success']}>
-              На вашу почту отправлено письмо с инструкцией. Если письма нету –
-              проверьте спам
-            </div>
-          ) : (
-            <div className={classes['forgot-form__resp-error']}>
-              {response.errorText}
-            </div>
-          ))}
-      </div>
-      <Button
-        onClick={handleForm}
-        className={classes['forgot-form__action']}
-        disabled={loading}
-        type={'submit'}
-        variant="contained"
-        color="primary"
-      >
-        Отправить письмо
-      </Button>
-      <Button
-        onClick={goAuth}
-        className={classes['forgot-form__action']}
-        disabled={loading}
-        variant="contained"
-        color="primary"
-      >
-        Авторизоваться
-      </Button>
-    </form>
+    <Formik<ForgotPasswordFormValues>
+      onSubmit={handleForm}
+      initialValues={forgetPasswordInitialValues}
+      validationSchema={forgotPasswordValidationSchema}
+    >
+      {({ isSubmitting }) => (
+        <Form className={classes['forgot-form']}>
+          <div className={classes['forgot-form__title']}>Введите ваш email</div>
+          <FormikInputField name="email" />
+          <div className={classes['forgot-form__resp']}>
+            {/*{response.ready &&*/}
+            {/*  (response.success ? (*/}
+            {/*    <div className={classes['forgot-form__resp-success']}>*/}
+            {/*      На вашу почту отправлено письмо с инструкцией. Если письма*/}
+            {/*      нету – проверьте спам*/}
+            {/*    </div>*/}
+            {/*  ) : (*/}
+            {/*    <div className={classes['forgot-form__resp-error']}>*/}
+            {/*      {response.errorText}*/}
+            {/*    </div>*/}
+            {/*  ))}*/}
+          </div>
+          <Button
+            className={classes['forgot-form__action']}
+            disabled={isSubmitting}
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Отправить письмо
+          </Button>
+          <Button
+            onClick={goAuth}
+            className={classes['forgot-form__action']}
+            disabled={isSubmitting}
+            variant="contained"
+            color="primary"
+          >
+            Авторизоваться
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 
