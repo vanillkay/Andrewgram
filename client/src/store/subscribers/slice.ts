@@ -1,4 +1,3 @@
-import * as subscribesActionTypes from './types';
 import { SubscribersState } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/user';

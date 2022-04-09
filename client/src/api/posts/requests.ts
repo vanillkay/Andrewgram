@@ -1,6 +1,7 @@
-import { client } from '../index';
-import { LikePost, LoadPosts } from './types';
-import { Post } from '../../types/post';
+import { client } from 'api';
+import { Post } from 'types/post';
+
+import { LikePost, LoadPosts, PublishComment } from './types';
 
 export const loadPosts = ({ login, count }: LoadPosts): Promise<Post[]> =>
   client
@@ -12,3 +13,6 @@ export const loadPosts = ({ login, count }: LoadPosts): Promise<Post[]> =>
 
 export const likePost = ({ id, likerLogin }: LikePost): Promise<void> =>
   client.post('/posts/like', { id, likerLogin }).then(({ data }) => data);
+
+export const publishPostComment = (values: PublishComment): Promise<void> =>
+  client.post('/post/comment', values).then(({ data }) => data);

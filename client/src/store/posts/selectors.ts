@@ -1,9 +1,17 @@
 import { Post } from 'types/post';
-import { RootState } from '../root/types';
+import { RootState } from 'store/root/types';
 
 export const getPosts = (store: RootState): Post[] => store.posts.posts;
-export const getAllPostsLoading = ({ posts }) => posts.isLoadingAllPosts;
-export const getUserPosts = ({ posts }) => posts.userPosts;
-export const getUserPostsLoaded = ({ posts }) => posts.isLoadedUserPosts;
-export const getPostLikeLoading = ({ posts }) => posts.isLikedPost;
-export const getPostCommentLoading = ({ posts }) => posts.isCommentPost;
+
+export const getAllPostsLoading = (store: RootState) =>
+  store.posts.isLoadingAllPosts;
+
+export const getUserPosts = (store: RootState) => store.posts.userPosts;
+
+export const getUserPostsLoaded = (store: RootState) =>
+  store.posts.isLoadedUserPosts;
+
+export const getPostLikeLoading = (store: RootState) => store.posts.isLikedPost;
+
+export const getPostCommentLoading = (store: RootState) =>
+  store.posts.isCommentPost;

@@ -9,19 +9,16 @@ import {
 import 'moment/locale/ru';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import React, { FC, useEffect, useState } from 'react';
 import { Skeleton } from '@material-ui/lab';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  writeNewComment,
-  toggleLoadingLike,
-  toggleLoadingPost,
+  toggleLikePostAction,
+  publishPostCommentAction,
 } from 'store/posts/actions';
-import { useHttp } from 'hooks/http.hook';
 import { Likes } from 'components/post/likes';
 import { getUserInfo } from 'store/user/selectors';
-import * as postsActions from 'store/posts/actions';
 import { NewComment } from 'components/post/new-comment';
 
 import { PostIcons } from './icons';
@@ -38,14 +35,19 @@ const Post: FC<PostInfoProps> = ({
   isLoadingPost = false,
 }) => {
   const {
+    // @ts-ignore
     isLiked,
     created,
+    // @ts-ignore
     id,
+    // @ts-ignore
     imgSrc,
     likes,
+    // @ts-ignore
     text,
     comments,
     ownerLogin,
+    // @ts-ignore
     avatar = '',
   } = info;
 
@@ -59,39 +61,27 @@ const Post: FC<PostInfoProps> = ({
 
   const user = useSelector(getUserInfo);
 
-  const { request } = useHttp();
-
   const toggleLike = () => {
-    dispatch(toggleLoadingLike());
-    request('/post/like', 'post', { id, likerLogin: user.login })
-      .then(() => {
-        if (isUserPost)
-          setModalInfo((prevState) => ({
-            ...prevState,
-            isLiked: !prevState.isLiked,
-          }));
-        dispatch(postsActions.toggleLike(id, user.login, isUserPost));
-      })
-      .finally(() => dispatch(toggleLoadingLike()));
+    dispatch(toggleLikePostAction(id));
+    // if (isUserPost)
+    //   setModalInfo((prevState) => ({
+    //     ...prevState,
+    //     isLiked: !prevState.isLiked,
+    //   }));
   };
 
   const loadComment = (comment: string) => {
-    dispatch(toggleLoadingPost());
-    request('/post/comment', 'post', { id, owner: user.login, comment })
-      .then((res) => {
-        dispatch(writeNewComment(isUserPost, id, { ...res.comment }));
-        setAnimationSide('left');
-        setIsComment(false);
-        setTimeout(() => {
-          setAnimationSide('right');
-        }, 500);
-      })
-      .finally(() => dispatch(toggleLoadingPost()));
+    dispatch(publishPostCommentAction({ id, owner: user.login, comment }));
+    // setAnimationSide('left');
+    // setIsComment(false);
+    // setTimeout(() => {
+    //   setAnimationSide('right');
+    // }, 500);
   };
 
   const date = moment.parseZone(created).calendar();
 
-  const toggleLikePost = (e: MouseEvent) => {
+  const onLike = (e: MouseEvent) => {
     //TODO Fix ts click event interface
     // @ts-ignore
     const targetData = e.target.dataset;
@@ -102,9 +92,9 @@ const Post: FC<PostInfoProps> = ({
 
   useEffect(() => {
     if (isUserPost) {
-      document.addEventListener('dblclick', toggleLikePost);
+      document.addEventListener('dblclick', onLike);
       return () => {
-        document.removeEventListener('dblclick', toggleLikePost);
+        document.removeEventListener('dblclick', onLike);
       };
     }
   }, []);
@@ -163,7 +153,7 @@ const Post: FC<PostInfoProps> = ({
       )}
 
       <CardContent>
-        {loadingPost ? (
+        {isLoadingPost ? (
           <>
             <Skeleton
               animation="wave"

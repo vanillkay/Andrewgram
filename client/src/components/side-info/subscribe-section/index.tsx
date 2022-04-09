@@ -1,14 +1,9 @@
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 
 import Subscribes from 'components/side-info/subscribe-section/subscribes';
 import { getRecommended, getSubscriptions } from 'store/subscribers/selectors';
 
-const useStyles = makeStyles(() => ({
-  'subscribe-section': {
-    marginTop: '2rem',
-  },
-}));
+import { useStyles } from './styles';
 
 const SubscribeSection = () => {
   const classes = useStyles();

@@ -1,73 +1,28 @@
-import React, { useState } from 'react';
-import ProfilePost from 'components/profile/posts/post';
-import { makeStyles } from '@material-ui/core/styles';
-import { Backdrop, Modal } from '@material-ui/core';
-import { Post } from 'components/post';
-
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserPosts } from '../../../store/posts/selectors';
+import ProfilePost from 'components/profile/posts/post';
+import { Backdrop, Modal } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
-  profile__posts: {
-    display: 'grid',
-    marginTop: '2rem',
-    gridTemplateColumns: 'repeat(1, 1fr)',
-    gridTemplateRows: 'repeat(2, 1fr)',
-    gridColumnGap: '2rem',
-    gridRowGap: '2rem',
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflowY: 'scroll',
-    width: '100vw',
-  },
-  'profile__modal-post': {
-    width: '80%',
-    height: 'auto',
-    outline: 'none',
-    position: 'absolute',
-    top: '1rem',
-    padding: '1rem 0',
-  },
-  'profile__posts-exist': {
-    textAlign: 'center',
-    marginTop: '2rem',
-    fontWeight: 'bold',
-    fontSize: '2rem',
-    gridColumnStart: 1,
-    gridColumnEnd: 5,
-    gridRowStart: 2,
-    gridRowEnd: 3,
-  },
-  '@media (min-width: 600px)': {
-    profile__posts: {
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gridTemplateRows: 'repeat(2, 1fr)',
-    },
-    'profile__modal-post': {
-      width: '50%',
-      height: 'auto',
-      outline: 'none',
-      position: 'relative',
-    },
-  },
-}));
+import { User } from 'types/user';
+import { Post } from 'components/post';
+import { getUserPosts } from 'store/posts/selectors';
 
-const ProfilePostsGrid = (props) => {
+import { useStyles } from './styles';
+
+const ProfilePostsGrid: FC<{ user: User; isLoading: boolean }> = ({
+  isLoading,
+  user,
+}) => {
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState(false);
   const classes = useStyles();
-
-  const { user, isLoading } = props;
 
   const posts = useSelector(getUserPosts);
 
   const handleClose = () => {
     setIsPostOpen(false);
   };
-
+  // @ts-ignore
   const openModal = (info) => {
     setModalInfo(info);
     setIsPostOpen(true);
@@ -79,6 +34,7 @@ const ProfilePostsGrid = (props) => {
     <>
       <div className={classes.profile__posts}>
         {!isLoading &&
+          // @ts-ignore
           posts.map((item) => (
             <ProfilePost
               key={item._id}
@@ -87,6 +43,7 @@ const ProfilePostsGrid = (props) => {
               imgSrc={item.imageSrc}
               info={item.info}
               created={item.created}
+              // @ts-ignore
               isLiked={item.isLiked}
               comments={item.comments}
               likes={item.likes}
@@ -112,6 +69,7 @@ const ProfilePostsGrid = (props) => {
           open={isPostOpen}
           onClose={handleClose}
           onClick={(event) => {
+            // @ts-ignore
             if (event.target.tagName === 'A') {
               handleClose();
             }
@@ -125,6 +83,7 @@ const ProfilePostsGrid = (props) => {
               isUserPost={true}
               handleClose={handleClose}
               setModalInfo={setModalInfo}
+              // @ts-ignore
               info={modalInfo}
             />
           </div>

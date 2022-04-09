@@ -1,8 +1,11 @@
-import * as userActionTypes from './actionTypes';
 import { createAction } from '@reduxjs/toolkit';
-import { LoginFormValues } from '../../components/common/forms/login/types';
 
-export const resetPasswordAction = createAction<string>(
+import { LoginFormValues } from 'components/common/forms/login/types';
+import { ChangePasswordValues, RegisterUserValues } from 'api/user/types';
+
+import * as userActionTypes from './actionTypes';
+
+export const resetUserPasswordAction = createAction<string>(
   userActionTypes.RESET_USER_PASSWORD
 );
 
@@ -10,26 +13,12 @@ export const loginUserAction = createAction<LoginFormValues>(
   userActionTypes.LOGIN_USER
 );
 
-export const authUser = (userInfo) => ({
-  type: userActionTypes.AUTH_USER,
-  payload: { ...userInfo },
-});
+export const logoutUserAction = createAction(userActionTypes.LOGOUT_USER);
 
-export const logoutUser = () => ({
-  type: userActionTypes.LOGOUT_USER,
-});
+export const registerUserAction = createAction<RegisterUserValues>(
+  userActionTypes.REGISTER_USER
+);
 
-export const setUserAvatar = (avatar) => ({
-  type: userActionTypes.SET_USER_AVATAR,
-  payload: avatar,
-});
-
-export const setVisitedUserInfo = (info) => ({
-  type: userActionTypes.SET_VISITED_USER_INFO,
-  payload: info,
-});
-
-export const toggleUserSubs = (subs) => ({
-  type: userActionTypes.TOGGLE_USER_SUBS,
-  payload: subs,
-});
+export const changeUserPasswordAction = createAction<ChangePasswordValues>(
+  userActionTypes.CHANGE_USER_PASSWORD
+);

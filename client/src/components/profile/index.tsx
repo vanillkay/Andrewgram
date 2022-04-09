@@ -4,48 +4,22 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { getLoading, getRecommended } from 'store/subscribers/selectors';
 import Profile from './ref';
+import { useStyles } from './styles';
+import { FC } from 'react';
+import { User } from '../../types/user';
 
-const useStyles = makeStyles(() => ({
-  'profile-info': {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  'profile-loading': {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    '& span:last-of-type': {
-      marginTop: '1rem',
-    },
-  },
-  '@media (min-width: 600px)': {
-    'profile-info': {
-      paddingLeft: '10rem',
-      flexDirection: 'column',
-    },
-    'profile-loading': {
-      flexDirection: 'row',
-      '& span:last-of-type': {
-        marginTop: 0,
-      },
-    },
-  },
-}));
-
-const ProfileInfo = (props) => {
-  const { isLoading, isOwn } = props;
-
-  const { user } = props;
-
+const ProfileInfo: FC<{ isLoading: boolean; isOwn: boolean; user: User }> = ({
+  isLoading,
+  isOwn,
+  user,
+}) => {
   const classes = useStyles();
 
   const recommended = useSelector(getRecommended);
 
   const isLoadingSubs = useSelector(getLoading);
 
+  // @ts-ignore
   const userProfType = recommended.find((item) => item.login === user.login)
     ? 'recommended'
     : 'subscription';

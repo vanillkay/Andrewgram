@@ -1,76 +1,19 @@
-import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Skeleton } from '@material-ui/lab';
+import { FC, useRef, useState } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, Button, Input, Modal, TextField } from '@material-ui/core';
 
-import { addUserPost } from 'store/posts/actions';
+import { useStyles } from './styles';
 
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: 'Montserrat',
-  },
-  'new-post': {
-    fontFamily: 'Montserrat',
-    minWidth: '500px',
-    boxSizing: 'border-box',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    boxShadow: theme.shadows[5],
-    position: 'relative',
-    padding: '3rem',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '&:focus': {
-      outline: 'none',
-    },
-  },
-  'new-post__title': {
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-    fontSize: '1.5rem',
-  },
-  'new-post__close-btn': {
-    position: 'absolute',
-    top: '1.5rem',
-    right: '1.5rem',
-  },
-  'new-post__info': {
-    alignSelf: 'flex-start',
-    width: '100%',
-  },
-  'new-post__load-btn': {
-    marginTop: '1rem',
-  },
-  'new-post__input-file': {
-    width: '100%',
-    marginBottom: '2rem',
-  },
-  'new-post__input-title': {
-    fontSize: '1.2rem',
-    marginBottom: '1rem',
-  },
-  'new-post__error': {
-    color: theme.colors.error,
-    fontWeight: 'bold',
-    marginTop: '1rem',
-  },
-}));
+const NewPost: FC<{ isLoading: boolean }> = ({ isLoading }) => {
+  const [isNewPost, setIsNewPost] = useState<boolean>(false);
 
-const NewPost = (props) => {
-  const { isLoading } = props;
-  const [isNewPost, setIsNewPost] = useState(false);
+  const [newPostInfo, setNewPostInfo] = useState<string>('');
 
-  const [newPostInfo, setNewPostInfo] = useState('');
+  const [isError, setIsError] = useState<boolean>(false);
 
-  const [isError, setIsError] = useState(false);
-
+  // @ts-ignore
   const handleInput = (e) => {
     setNewPostInfo(e.target.value);
   };
@@ -91,6 +34,7 @@ const NewPost = (props) => {
 
   const download = async () => {
     try {
+      // @ts-ignore
       if (!fileInput.current.files[0]) {
         setIsError(true);
         return;
@@ -98,6 +42,7 @@ const NewPost = (props) => {
 
       if (isError) setIsError(false);
       let formData = new FormData();
+      // @ts-ignore
       formData.append('avatar', fileInput.current.files[0]);
       formData.set('user', 'andrew');
       formData.set('info', newPostInfo);
@@ -110,7 +55,7 @@ const NewPost = (props) => {
       const data = await res.json();
 
       if (data.post) {
-        dispatch(addUserPost(data.post));
+        // dispatch(addUserPost(data.post));
         setIsNewPost(false);
         setNewPostInfo('');
       }
@@ -143,6 +88,7 @@ const NewPost = (props) => {
               </div>
               <div className={classes['new-post__input-title']}>Фото поста</div>
               <Input
+                // @ts-ignore
                 accept="image/*"
                 id="contained-button-file"
                 multiple

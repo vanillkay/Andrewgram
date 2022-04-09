@@ -31,7 +31,7 @@ const postsSlice = createSlice({
     toggleLikePost: (
       state,
       action: PayloadAction<{
-        id: number;
+        id: string;
         isUserPost: boolean;
         likeOwner: string;
       }>
@@ -66,7 +66,7 @@ const postsSlice = createSlice({
       state,
       action: PayloadAction<{
         isUserPost: boolean;
-        postId: number;
+        postId: string;
         comment: string;
       }>
     ) => {

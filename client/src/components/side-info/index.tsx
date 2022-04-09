@@ -1,15 +1,11 @@
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 
 import ProfileRef from 'components/profile/ref';
 import { getUserInfo } from 'store/user/selectors';
 import SubscribeSection from 'components/side-info/subscribe-section';
 
-const useStyles = makeStyles(() => ({
-  'profile-info': {
-    padding: '.5rem',
-  },
-}));
+import { useStyles } from './styles';
+
 const SideProfileInfo = () => {
   const user = useSelector(getUserInfo);
 

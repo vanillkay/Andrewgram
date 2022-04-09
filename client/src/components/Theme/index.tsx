@@ -1,7 +1,7 @@
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import React from 'react';
 
 const theme = createMuiTheme({
+  // @ts-ignore
   colors: {
     main: '#3f51b5',
     error: '#f44336',
@@ -17,6 +17,7 @@ const theme = createMuiTheme({
   },
 });
 
+// @ts-ignore
 const Theme = (props) => (
   <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
 );

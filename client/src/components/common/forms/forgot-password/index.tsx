@@ -11,7 +11,7 @@ import {
 import { useStyles } from './styles';
 import FormikInputField from '../../input-field';
 import { ForgotPasswordFormValues } from './types';
-import { resetPasswordAction } from '../../../../store/user/actions';
+import { resetUserPasswordAction } from '../../../../store/user/actions';
 
 const ForgotPasswordForm: FC<{
   setIsAppear: Dispatch<SetStateAction<boolean>>;
@@ -25,7 +25,7 @@ const ForgotPasswordForm: FC<{
     helpers: FormikHelpers<ForgotPasswordFormValues>
   ) => {
     helpers.setSubmitting(true);
-    dispatch(resetPasswordAction(values.email));
+    dispatch(resetUserPasswordAction(values.email));
   };
 
   const goAuth = () => {

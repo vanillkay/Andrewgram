@@ -1,5 +1,5 @@
 export interface Post {
-  readonly id: string;
+  readonly _id: string;
   readonly imageSrc: string;
   readonly info: string;
   readonly created: Date;

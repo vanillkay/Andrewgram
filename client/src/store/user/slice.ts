@@ -1,4 +1,3 @@
-import * as userActionTypes from './types';
 import { UserState } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 

@@ -14,6 +14,7 @@ const PostsList: FC<{ isLoading: boolean }> = ({ isLoading }) => {
 
   const [isAllPosts, setIsAllPosts] = useState(false);
 
+  // @ts-ignore
   const toggleLikePost = (e) => {
     const targetData = e.target.dataset;
     if (targetData.type === 'post' && targetData.info) {
@@ -40,7 +41,8 @@ const PostsList: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   return (
     <>
       {isLoading ? (
-        loading.map((item, index) => <Post key={index} loadingPost={true} />)
+        // @ts-ignore
+        loading.map((item, index) => <Post key={index} isLoadingPost={true} />)
       ) : (
         <InfiniteScroll
           next={loadPosts}
@@ -59,12 +61,15 @@ const PostsList: FC<{ isLoading: boolean }> = ({ isLoading }) => {
           }
         >
           {serverPosts.map((item) => (
+            // @ts-ignore
             <Post
               info={{
+                // @ts-ignore
                 isLiked: !!item.isLiked,
                 likes: item.likes,
                 comments: item.comments,
                 id: item._id,
+                // @ts-ignore
                 avatar: item.avatar,
                 imgSrc: item.imageSrc,
                 ownerLogin: item.ownerLogin,

@@ -1,60 +1,26 @@
-import { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Backdrop, Button, Input, Modal } from '@material-ui/core';
 
-import { setUserAvatar } from 'store/user/actions';
+import { useStyles } from './styles';
 
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: 'Montserrat',
-  },
-  'new-avatar': {
-    fontFamily: 'Montserrat',
-    minWidth: '500px',
-    boxSizing: 'border-box',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    boxShadow: theme.shadows[5],
-    position: 'relative',
-    padding: '3rem',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '&:focus': {
-      outline: 'none',
-    },
-  },
-  'new-avatar__file-error': {
-    marginTop: '1rem',
-    textAlign: 'center',
-    color: theme.colors.error,
-    fontWeight: 'bold',
-  },
-  'new-avatar__load-btn': {
-    marginTop: '2rem',
-  },
-}));
-
-const NewAvatar = (props) => {
-  const { open, login } = props;
-
+const NewAvatar: FC<{ open: (param: boolean) => void; login: string }> = ({
+  open,
+  login,
+}) => {
   const classes = useStyles();
 
-  const [img, setImg] = useState('');
+  const [img, setImg] = useState<string>('');
 
   const [error, setError] = useState({ isError: false, text: '' });
 
-  const [inputImg, setInputImg] = useState('');
+  const [inputImg, setInputImg] = useState<string>('');
 
   const dispatch = useDispatch();
 
   const input = useRef();
 
+  // @ts-ignore
   const downloadImg = (event) => {
     const file = event.target.files[0];
     if (!file.type) {
@@ -79,6 +45,7 @@ const NewAvatar = (props) => {
     setInputImg(event.target.file);
     const reader = new FileReader();
     reader.addEventListener('load', (e) => {
+      // @ts-ignore
       setImg(e.target.result);
     });
     reader.readAsDataURL(file);
@@ -87,6 +54,7 @@ const NewAvatar = (props) => {
   const download = async () => {
     try {
       const formData = new FormData();
+      // @ts-ignore
       formData.append('avatar', input.current.files[0]);
       formData.set('user', login);
 
@@ -97,7 +65,7 @@ const NewAvatar = (props) => {
 
       const data = await res.json();
       if (data.path) {
-        dispatch(setUserAvatar(data.path));
+        // dispatch(setUserAvatar(data.path));
         open(false);
       } else {
         setError({
@@ -123,6 +91,7 @@ const NewAvatar = (props) => {
       <div className={classes['new-avatar']}>
         <Avatar style={{ width: '7rem', height: '7rem' }} src={img} />
         <Input
+          // @ts-ignore
           accept="image/*"
           id="contained-button-file"
           multiple

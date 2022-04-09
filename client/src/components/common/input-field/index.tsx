@@ -1,6 +1,6 @@
-import React from 'react';
 import { FieldHookConfig, useField } from 'formik';
 import TextField from '@material-ui/core/TextField';
+
 import { FormikInputFiledProps } from './types';
 
 const FormikInputField = ({
@@ -12,11 +12,10 @@ const FormikInputField = ({
 
   return (
     <TextField
-      error={Boolean(meta.error)}
-      id="filled-error-helper-text9"
-      helperText={meta.error}
-      variant={variant}
       label={label}
+      variant={variant}
+      helperText={meta.error}
+      error={Boolean(meta.error)}
       {...field}
     />
   );

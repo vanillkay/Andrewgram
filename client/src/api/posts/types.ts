@@ -4,6 +4,12 @@ export interface LoadPosts {
 }
 
 export interface LikePost {
-  id: number;
+  id: string;
   likerLogin: string;
+}
+
+export interface PublishComment {
+  id: string;
+  owner: string;
+  comment: string;
 }
