@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const userInitialState: UserState = {
   isAuth: false,
   isLoadingInfo: true,
-  userInfo: {},
+  user: null,
   visitedUserInfo: {
     subscriptions: [],
     subscribers: [],
@@ -72,6 +72,7 @@ const userSlice = createSlice({
 
         state.visitedUserInfo.subscribers.splice(posInUserSubs, 1);
 
+        // @ts-ignore
         state.userInfo = {
           // @ts-ignore
           ...state.userInfo,

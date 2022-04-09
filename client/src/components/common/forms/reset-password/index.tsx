@@ -1,98 +1,98 @@
-import { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Form, Formik, FormikHelpers } from 'formik';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 
-import FormikInputField from 'components/common/input-field';
-import { changeUserPasswordAction } from 'store/user/actions';
+import { Nullable } from 'types/utils';
+import { resetUserPasswordAction } from 'store/user/actions';
+import { FormikInputField } from 'components/common/input-field';
 
 import {
   resetPasswordInitialValues,
   resetPasswordValidationSchema,
 } from './config';
 import { useStyles } from './styles';
-import { ChangePasswordFormValues } from './types';
+import { setFormikSubmitting } from '../helpers';
+import { ForgotPasswordFormValues } from './types';
+import { ServerError } from '../server-error';
 
-const ResetPassword: FC<{ token: string }> = ({ token }) => {
-  const [serverError, setServerError] = useState({
-    isError: false,
-    errorText: '',
-  });
-  const [isReady, setIsReady] = useState(false);
+const ResetPasswordForm: FC<{
+  setIsAppear: Dispatch<SetStateAction<boolean>>;
+}> = ({ setIsAppear }) => {
+  const [isSuccess, setIsSuccess] = useState<Nullable<boolean>>(null);
+  const [serverError, setServerError] = useState<Nullable<string>>(null);
 
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const resetPassword = (
-    values: ChangePasswordFormValues,
-    helpers: FormikHelpers<ChangePasswordFormValues>
+  const handleForm = (
+    values: ForgotPasswordFormValues,
+    helpers: FormikHelpers<ForgotPasswordFormValues>
   ) => {
-    helpers.setSubmitting(true);
-    dispatch(changeUserPasswordAction({ password: values.password, token }));
+    setFormikSubmitting(helpers);
+    if (serverError) {
+      setServerError(null);
+    }
+    dispatch(
+      resetUserPasswordAction({
+        email: values.email,
+        onError: (e) => setServerError(e),
+        onFinal: () => setFormikSubmitting(helpers, false),
+        onSuccess: () => setIsSuccess(true),
+      })
+    );
+  };
+
+  const goAuth = () => {
+    setIsAppear(false);
+    setTimeout(() => {
+      history.push('/auth');
+    }, 500);
   };
 
   return (
-    <Formik<ChangePasswordFormValues>
-      validationSchema={resetPasswordValidationSchema}
+    <Formik<ForgotPasswordFormValues>
+      onSubmit={handleForm}
       initialValues={resetPasswordInitialValues}
-      onSubmit={resetPassword}
+      validationSchema={resetPasswordValidationSchema}
     >
-      {({ isSubmitting }) => (
-        <Form className={classes['reset-form']}>
-          <div className={classes['reset-form__title']}>
-            Введите новый пароль
-          </div>
-          <FormikInputField
-            label="Пароль"
-            name="password"
-            type="password"
-            className={classes['reset-form__input']}
-          />
-          <FormikInputField
-            label="Пароль ещё раз"
-            name="confirmPassword"
-            type="password"
-            className={classes['reset-form__input']}
-          />
-          <div className={classes['reset-form__resp']}>
-            {isReady && serverError.isError && (
-              <div className={classes['reset-form__resp-error']}>
-                {serverError.errorText}
-              </div>
-            )}
-            {isReady && !serverError.isError && (
-              <div className={classes['reset-form__resp-success']}>
-                Вы успешно изменили пароль
+      {({ isSubmitting, isValid, values }) => (
+        <Form className={classes['forgot-form']}>
+          <div className={classes['forgot-form__title']}>Введите ваш email</div>
+          <FormikInputField name="email" type="email" label="Email" />
+          <div className={classes['forgot-form__resp']}>
+            <ServerError serverError={serverError} />
+            {isSuccess && (
+              <div className={classes['forgot-form__resp-success']}>
+                На вашу почту {values.email} отправлено письмо с инструкцией.
+                Если письма нету – проверьте спам
               </div>
             )}
           </div>
           <Button
-            className={classes['reset-form__action']}
-            disabled={isSubmitting}
-            type={'submit'}
-            variant="contained"
+            type="submit"
             color="primary"
+            variant="contained"
+            disabled={isSubmitting || !isValid}
+            className={classes['forgot-form__action']}
           >
-            Измeнить пароль
+            Отправить письмо
           </Button>
-          {isReady && !serverError.isError && (
-            <Button
-              onClick={() => history.push('/auth')}
-              className={classes['reset-form__action']}
-              disabled={isSubmitting}
-              type={'submit'}
-              variant="contained"
-              color="primary"
-            >
-              Авторизоваться
-            </Button>
-          )}
+          <Button
+            color="primary"
+            onClick={goAuth}
+            variant="contained"
+            disabled={isSubmitting}
+            className={classes['forgot-form__action']}
+          >
+            Авторизоваться
+          </Button>
         </Form>
       )}
     </Formik>
   );
 };
 
-export { ResetPassword };
+export { ResetPasswordForm };

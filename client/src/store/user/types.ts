@@ -3,7 +3,7 @@ import { User } from 'types/user';
 export interface UserState {
   isAuth: boolean;
   isLoadingInfo: boolean;
-  userInfo: unknown;
+  user: User | null;
   visitedUserInfo: {
     subscriptions: User[];
     subscribers: User[];

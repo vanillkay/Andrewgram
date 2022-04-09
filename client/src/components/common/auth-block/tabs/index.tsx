@@ -12,6 +12,7 @@ import { RegisterForm } from 'components/common/forms/register';
 
 import { a11yProps } from '../helpers';
 import { LinkTabProps, TabPanelProps } from '../types';
+import { useHistory } from 'react-router-dom';
 
 const TabPanel: FC<TabPanelProps> = ({ value, index, children, ...other }) => (
   <div
@@ -39,9 +40,17 @@ const FullWidthTabs: FC<{ setIsAppear: Dispatch<SetStateAction<boolean>> }> = ({
   const [value, setValue] = useState<number>(0);
 
   const theme = useTheme();
+  const history = useHistory();
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
+  };
+
+  const closeAndRedirect = (redirectPath: string) => {
+    setIsAppear(false);
+    setTimeout(() => {
+      history.push(redirectPath);
+    }, 700);
   };
 
   return (
@@ -65,10 +74,10 @@ const FullWidthTabs: FC<{ setIsAppear: Dispatch<SetStateAction<boolean>> }> = ({
         axis={!value ? 'x-reverse' : 'x'}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <LoginForm setIsAppear={setIsAppear} />
+          <LoginForm closeAndRedirect={closeAndRedirect} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <RegisterForm />
+          <RegisterForm closeAndRedirect={closeAndRedirect} />
         </TabPanel>
       </SwipeableViews>
     </div>

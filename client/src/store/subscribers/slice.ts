@@ -1,10 +1,10 @@
 import { SubscribersState } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../types/user';
+import { User, UserShortInfo } from '../../types/user';
 
 const subscribersInitialState: SubscribersState = {
-  subscription: [],
-  recommended: [],
+  subscription: null,
+  recommended: null,
   isLoading: false,
 };
 
@@ -15,10 +15,10 @@ const subscribersSlice = createSlice({
     toggleLoading: (state) => {
       state.isLoading = !state.isLoading;
     },
-    setRecommended: (state, action: PayloadAction<User[]>) => {
+    setRecommended: (state, action: PayloadAction<UserShortInfo[]>) => {
       state.recommended = action.payload;
     },
-    setSubscriptions: (state, action: PayloadAction<User[]>) => {
+    setSubscriptions: (state, action: PayloadAction<UserShortInfo[]>) => {
       state.subscription = action.payload;
     },
     toggleSubs: (
@@ -28,14 +28,15 @@ const subscribersSlice = createSlice({
         type: 'subscription' | 'recommended';
       }>
     ) => {
+      if (!state.recommended || !state.subscription) return;
       const { login, type } = action.payload;
 
       const arrToAddSubs =
         type === 'subscription' ? 'recommended' : 'subscription';
-      const subscribedProfile = state[type].find(
+      const subscribedProfile = state[type]!.find(
         (item) => item.login === login
       );
-      const newArrWithoutSubs = state[type].filter(
+      const newArrWithoutSubs = state[type]!.filter(
         (item) => item.login !== login
       );
       // @ts-ignore

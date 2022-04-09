@@ -1,4 +1,4 @@
-import { FieldHookConfig, useField } from 'formik';
+import { useField } from 'formik';
 import TextField from '@material-ui/core/TextField';
 
 import { FormikInputFiledProps } from './types';
@@ -6,19 +6,25 @@ import { FormikInputFiledProps } from './types';
 const FormikInputField = ({
   label = 'Test',
   variant = 'filled',
+  className,
+  type,
   ...props
-}: FormikInputFiledProps & FieldHookConfig<string>) => {
+}: FormikInputFiledProps) => {
   const [field, meta] = useField(props);
+
+  const error = meta.touched && meta.error;
 
   return (
     <TextField
+      type={type}
       label={label}
       variant={variant}
-      helperText={meta.error}
-      error={Boolean(meta.error)}
+      className={className}
+      helperText={error}
+      error={Boolean(error)}
       {...field}
     />
   );
 };
 
-export default FormikInputField;
+export { FormikInputField };

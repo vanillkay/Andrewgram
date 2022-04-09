@@ -1,7 +1,8 @@
-import { User } from 'types/user';
+import { Nullable } from 'types/utils';
+import { UserShortInfo } from 'types/user';
 
 export interface SubscribersState {
-  subscription: User[];
-  recommended: User[];
+  subscription: Nullable<UserShortInfo[]>;
+  recommended: Nullable<UserShortInfo[]>;
   isLoading: boolean;
 }

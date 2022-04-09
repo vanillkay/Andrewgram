@@ -1,32 +1,32 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
-  'reset-form': {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
+  'forgot-form': {
+    minWidth: '300px',
     maxWidth: '500px',
     margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  'reset-form__input': {
-    marginBottom: '1rem',
-    minWidth: '250px',
-  },
-  'reset-form__title': {
+  'forgot-form__title': {
     marginBottom: '2rem',
   },
-  'reset-form__action': {
-    marginTop: '2rem',
+  'forgot-form__action': {
+    marginTop: '1.5rem',
+    minWidth: '200px',
   },
-  'reset-form__resp': {
+  'forgot-form__resp': {
+    marginTop: '1rem',
+    textAlign: 'center',
     fontSize: '1.2rem',
   },
-  'reset-form__resp-success': {
+  'forgot-form__resp-success': {
     // @ts-ignore
     color: theme.colors.success,
   },
-  'reset-form__resp-error': {
+  'forgot-form__resp-error': {
     // @ts-ignore
     color: theme.colors.error,
   },

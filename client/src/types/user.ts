@@ -1,5 +1,11 @@
 import { Post } from './post';
 
+export interface UserShortInfo {
+  readonly _id: string;
+  readonly login: string;
+  readonly avatar: string;
+}
+
 export interface User {
   readonly login: string;
   readonly resetToken: string;
@@ -11,16 +17,11 @@ export interface User {
   readonly posts: {
     readonly items: Array<Post>;
   };
-  readonly subscriptions: Array<{
-    readonly login: string;
-    readonly avatar: string;
-  }>;
-  readonly subscribers: Array<{
-    readonly login: string;
-    readonly avatar: string;
-  }>;
-  readonly recommended: Array<{
-    readonly login: string;
-    readonly avatar: string;
-  }>;
+  readonly subscriptions: Array<UserShortInfo>;
+  readonly subscribers: Array<UserShortInfo>;
+  readonly recommended: Array<UserShortInfo>;
+}
+
+export interface UserToken {
+  token: string;
 }

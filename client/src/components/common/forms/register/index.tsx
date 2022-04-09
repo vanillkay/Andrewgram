@@ -1,120 +1,102 @@
-import { useState } from 'react';
-import { Button } from '@material-ui/core';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Button } from '@material-ui/core';
 import { Form, Formik, FormikHelpers } from 'formik';
-
 import { registerUserAction } from 'store/user/actions';
-import FormikInputField from 'components/common/input-field';
 
+import { Nullable } from 'types/utils';
+
+import {
+  isSubmitDisabled,
+  renderFormFields,
+  setFormikSubmitting,
+} from '../helpers';
+import {
+  registerFormFields,
+  registerInitialValues,
+  registerValidationSchema,
+} from './config';
 import { useStyles } from './styles';
 import { RegisterFormValues } from './types';
-import { registerInitialValues, registerValidationSchema } from './config';
+import { ServerError } from '../server-error';
 
-const RegisterForm = () => {
-  const [isServerError, setIsServerError] = useState(false);
-  const [serverErrorText, setServerErrorText] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
+const RegisterForm: FC<{ closeAndRedirect: (redirectPath: string) => void }> =
+  ({ closeAndRedirect }) => {
+    const [serverError, setServerError] = useState<Nullable<string>>(null);
 
-  const dispatch = useDispatch();
+    const classes = useStyles();
+    const dispatch = useDispatch();
 
-  const handleForm = (
-    values: RegisterFormValues,
-    helpers: FormikHelpers<RegisterFormValues>
-  ) => {
-    helpers.setSubmitting(true);
-    const { confirmPassword, ...userValues } = values;
+    const onError =
+      ({ setErrors }: FormikHelpers<RegisterFormValues>) =>
+      (message: string) => {
+        if (message.toLowerCase().includes('логин')) {
+          setErrors({ login: 'Такой логин уже занят' });
+          return;
+        }
+        if (message.includes('email')) {
+          setErrors({ email: 'Такой email уже занят' });
+          return;
+        }
+        setServerError(message);
+      };
 
-    dispatch(registerUserAction(userValues));
+    const onSuccess = () => {
+      closeAndRedirect('/app');
+    };
 
-    // if (!user.user) {
-    //   throw new Error('Ошибка регистрации');
-    // } else {
-    //   if (isServerError) {
-    //     setIsServerError(false);
-    //   }
-    //   setIsSuccess(true);
-    // }
-    // if (error.message.toLowerCase().includes('логин')) {
-    //   setErrors((prevState) => ({ ...prevState, login: true }));
-    // } else if (error.message.includes('email')) {
-    //   setErrors((prevState) => ({ ...prevState, email: true }));
-    // } else if (
-    //   error.message.toLowerCase().includes('пароль') ||
-    //   error.message.toLowerCase().includes('пароли')
-    // ) {
-    //   setErrors((prevState) => ({
-    //     ...prevState,
-    //     password: true,
-    //     rePassword: true,
-    //   }));
-    // }
-    // setIsServerError(true);
-    // setServerErrorText(e.message);
+    const handleForm = (
+      values: RegisterFormValues,
+      helpers: FormikHelpers<RegisterFormValues>
+    ) => {
+      helpers.setErrors({});
+      setFormikSubmitting(helpers);
+      if (serverError) {
+        setServerError(null);
+      }
+      const { confirmPassword, ...userValues } = values;
+      dispatch(
+        registerUserAction({
+          ...userValues,
+          onError: onError(helpers),
+          onSuccess,
+          onFinal: () => setFormikSubmitting(helpers, false),
+        })
+      );
+    };
+
+    return (
+      <div>
+        <div className={classes['form-title']}>Введите данные</div>
+        <Formik<RegisterFormValues>
+          onSubmit={handleForm}
+          initialValues={registerInitialValues}
+          validationSchema={registerValidationSchema}
+        >
+          {(formikProps) => (
+            <Form className={classes.form}>
+              <div className={classes.inputs}>
+                {renderFormFields(registerFormFields, classes.input)}
+              </div>
+              <ServerError serverError={serverError} />
+              <div className={classes['form-actions']}>
+                <Button
+                  disabled={isSubmitDisabled(
+                    registerInitialValues,
+                    formikProps
+                  )}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Зарегестривароваться
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    );
   };
-
-  const classes = useStyles();
-  return (
-    <div>
-      <div className={classes['form-title']}>Введите данные</div>
-      <Formik<RegisterFormValues>
-        validationSchema={registerValidationSchema}
-        initialValues={registerInitialValues}
-        onSubmit={handleForm}
-      >
-        {({ isSubmitting }) => (
-          <Form className={classes.form}>
-            <div className={classes.inputs}>
-              <FormikInputField
-                label="Логин"
-                name="login"
-                className={classes.input}
-              />
-              <FormikInputField
-                label="Имя"
-                name="name"
-                className={classes.input}
-              />
-              <FormikInputField
-                label="Email"
-                name="email"
-                className={classes.input}
-              />
-              <FormikInputField
-                label="Пароль"
-                type="password"
-                name="password"
-                className={classes.input}
-              />
-              <FormikInputField
-                label="Пароль ещё раз"
-                type="password"
-                name="confirmPassword"
-                className={classes.input}
-              />
-            </div>
-            {isServerError && (
-              <p className={classes['register-error']}>{serverErrorText}</p>
-            )}
-            {isSuccess && (
-              <p className={classes['register-success']}>
-                Вы успешно зарегистрировались
-              </p>
-            )}
-            <div className={classes['form-actions']}>
-              <Button
-                disabled={isSubmitting}
-                type="submit"
-                variant="contained"
-                color="primary"
-              >
-                Зарегестривароваться
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
 
 export { RegisterForm };

@@ -26,12 +26,6 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '1rem',
     },
   },
-  'register-error': {
-    // @ts-ignore
-    color: theme.colors.error,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   'register-success': {
     // @ts-ignore
     color: theme.colors.success,

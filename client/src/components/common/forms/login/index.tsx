@@ -1,62 +1,79 @@
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Dispatch, FC, SetStateAction } from 'react';
 
+import { Nullable } from 'types/utils';
 import { loginUserAction } from 'store/user/actions';
-import FormikInputField from 'components/common/input-field';
 
+import {
+  isSubmitDisabled,
+  renderFormFields,
+  setFormikSubmitting,
+} from '../helpers';
+import {
+  loginFormFields,
+  loginInitialValues,
+  loginValidationSchema,
+} from './config';
 import { useStyles } from './styles';
 import { LoginFormValues } from './types';
-import { loginInitialValues, loginValidationSchema } from './config';
+import { ServerError } from '../server-error';
 
-const LoginForm: FC<{ setIsAppear: Dispatch<SetStateAction<boolean>> }> = ({
-  setIsAppear,
+const LoginForm: FC<{ closeAndRedirect: (redirectPath: string) => void }> = ({
+  closeAndRedirect,
 }) => {
-  const history = useHistory();
+  const [serverError, setServerError] = useState<Nullable<string>>(null);
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const onSuccess = () => {
+    closeAndRedirect('/app');
+  };
+
+  const onError = (e: any) => {
+    setServerError(e);
+  };
 
   const handleForm = (
     values: LoginFormValues,
     helpers: FormikHelpers<LoginFormValues>
   ) => {
-    helpers.setSubmitting(true);
-    dispatch(loginUserAction(values));
-    // setIsAppear(false);
-    // setTimeout(() => {
-    //   history.push('/app');
-    // }, 700);
+    if (serverError) {
+      setServerError(null);
+    }
+    setFormikSubmitting(helpers);
+    dispatch(
+      loginUserAction({
+        ...values,
+        onSuccess,
+        onError,
+        onFinal: () => setFormikSubmitting(helpers, false),
+      })
+    );
   };
 
   const forgotPasswordHandle = () => {
-    setIsAppear(false);
-    setTimeout(() => {
-      history.push('/auth/reset');
-    }, 700);
+    closeAndRedirect('/auth/reset');
   };
 
   return (
     <div>
       <div className={classes['form-title']}>Введите данные</div>
       <Formik<LoginFormValues>
+        onSubmit={handleForm}
         initialValues={loginInitialValues}
         validationSchema={loginValidationSchema}
-        onSubmit={handleForm}
       >
-        {({ isSubmitting }) => (
+        {(formikProps) => (
           <Form className={classes.form}>
             <div className={classes.inputs}>
-              <FormikInputField name="login" className={classes.input} />
-              <FormikInputField name="password" className={classes.input} />
+              {renderFormFields(loginFormFields, classes.input)}
             </div>
-            {/*{isServerError && (*/}
-            {/*  <p className={classes['login-error']}>{serverErrorText}</p>*/}
-            {/*)}*/}
+            <ServerError serverError={serverError} />
             <div className={classes['form-actions']}>
               <Button
-                disabled={isSubmitting}
+                disabled={isSubmitDisabled(loginInitialValues, formikProps)}
                 type={'submit'}
                 variant="contained"
                 color="primary"
@@ -67,7 +84,7 @@ const LoginForm: FC<{ setIsAppear: Dispatch<SetStateAction<boolean>> }> = ({
                 onClick={forgotPasswordHandle}
                 variant="contained"
                 style={{ marginTop: '20px' }}
-                disabled={isSubmitting}
+                disabled={formikProps.isSubmitting}
                 color="primary"
               >
                 Забыли пароль

@@ -79,9 +79,8 @@ router.post('/login', loginValidators, async (req, res) => {
         req.session.isAuth = true;
         req.session.save(err => {
             if (err) throw err;
-            res.status(200).json({userInfo});
+            res.status(200).json({user});
         })
-
 
     } catch (e) {
         res.status(500).json({message: 'Серверная ошибка'})

@@ -1,3 +1,3 @@
-export interface ChangePasswordFormValues {
-  password: string;
+export interface ForgotPasswordFormValues {
+  email: string;
 }

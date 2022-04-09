@@ -1,35 +1,38 @@
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { Loader } from 'components/common/loader';
-import { ResetPassword } from 'components/common/forms/reset-password';
+import { checkChangePasswordToken } from 'store/user/actions';
+import { ChangePasswordForm } from 'components/common/forms/change-password';
+
 import { useStyles } from './styles';
 
-const ResetPasswordPage = () => {
+const ChangePasswordPage = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
-  const { token } = useParams<{ token: string }>();
-  const history = useHistory();
+
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
-    // request('/auth/reset/check', 'post', { token })
-    //   .then((res) => {
-    //     if (res.success) {
-    //       setIsValid(true);
-    //     } else {
-    //       history.push('/auth');
-    //     }
-    //   })
-    //   .catch(() => {});
+    dispatch(
+      checkChangePasswordToken({
+        token,
+        onSuccess: () => setIsValid(true),
+        onError: () => history.push('/auth'),
+      })
+    );
   }, []);
 
-  if (false) return <Loader />;
+  if (!isValid) return <Loader />;
 
   return (
     <div className={classes['reset-page']}>
-      {isValid && <ResetPassword token={token} />}
+      {isValid && <ChangePasswordForm token={token} />}
     </div>
   );
 };
 
-export { ResetPasswordPage };
+export { ChangePasswordPage };

@@ -8,7 +8,7 @@ import ProfilePage from 'pages/profile';
 import { EntryPage } from 'pages/entry';
 import { isAuth } from 'store/user/selectors';
 import { AuthPage } from 'pages/auth';
-import { ResetPasswordPage } from 'pages/password/reset';
+import { ChangePasswordPage } from 'pages/password/reset';
 import { ForgotPasswordPage } from 'pages/password/forgot';
 
 const ProtectedRoute: FC<RouteProps> = (props) => {
@@ -27,7 +27,7 @@ const AndrewgramRoutes = () => (
     <Route exact path="/" component={EntryPage} />
     <Route exact path="/auth" component={AuthPage} />
     <Route exact path="/auth/reset" component={ForgotPasswordPage} />
-    <Route exact path="/auth/reset/:token" component={ResetPasswordPage} />
+    <Route exact path="/auth/reset/:token" component={ChangePasswordPage} />
     <ProtectedRoute exact path="/app" component={MainPage} />
     <ProtectedRoute exact path="/profile/:login" component={ProfilePage} />
     {/*<Route path='*' component={Page404}/>*/}
